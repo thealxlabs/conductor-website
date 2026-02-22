@@ -61,6 +61,7 @@
     a { color:inherit; text-decoration:none; }
     code { font-family: var(--mono); font-size:.82em; color: var(--orange); background: var(--orange-lo); padding: 2px 6px; border-radius: 3px; }
 
+    /* === NAV === */
     nav {
       position: fixed; top:0; width:100%;
       background: rgba(8,8,8,.75); backdrop-filter: blur(24px) saturate(1.8); -webkit-backdrop-filter: blur(24px) saturate(1.8);
@@ -70,56 +71,57 @@
     .logo { font-family: var(--mono); font-size: 1rem; font-weight: 700; color: var(--text); letter-spacing: -.5px; display: flex; align-items: center; gap: 10px; cursor: pointer; }
     .logo-mark { width: 28px; height: 28px; background: linear-gradient(135deg, var(--orange), #ff9a6b); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: .65rem; color: #fff; font-weight: 700; box-shadow: var(--glow-o); }
     .nav-links { display: flex; gap: 2px; align-items: center; }
-    .nav-links a { color: var(--muted); font-size: .75rem; font-weight: 600; padding: 6px 12px; border-radius: 4px; transition: all .2s; cursor: pointer; letter-spacing: .3px; font-family: var(--mono); text-transform: uppercase; }
+    .nav-links a { color: var(--muted); font-size: .8rem; font-weight: 600; padding: 6px 14px; border-radius: 4px; transition: all .2s; cursor: pointer; letter-spacing: .3px; }
     .nav-links a:hover { color: var(--text); background: rgba(255,255,255,.05); }
     .nav-links a.active { color: var(--text); background: rgba(255,255,255,.07); }
     .nav-github { display: flex; align-items: center; gap: 6px; color: var(--muted) !important; border: 1px solid var(--border) !important; font-size: .75rem !important; }
 
     main { padding: 90px 32px 80px; max-width:1200px; margin:0 auto; width:100%; position: relative; z-index:1; }
 
-    footer { border-top: 1px solid var(--border); padding: 40px 32px; position: relative; z-index: 1; }
-    .footer-inner { max-width: 1200px; margin:0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
-    .footer-credit { font-family: var(--mono); font-size: .75rem; color: var(--muted); }
-    .footer-links { display: flex; gap: 24px; }
-    .footer-links a { font-family: var(--mono); font-size: .72rem; color: var(--muted); cursor: pointer; }
-    .footer-links a:hover { color: var(--text); }
-
-    .card { background: rgba(255,255,255,.04); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,.09); padding: 32px; border-radius: 8px; margin-bottom: 24px; position: relative; overflow: hidden; }
-    .card::before { content:''; position:absolute; top:0; left:0; width:3px; height:100%; background:rgba(255,255,255,.08); }
+    /* === CARD === */
+    .card {
+      background: rgba(255,255,255,.04); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,.09);
+      padding: 32px; border-radius: 8px; position: relative; overflow: hidden; margin-bottom: 24px;
+    }
+    .card::before { content:''; position:absolute; top:0; left:0; width:3px; height:100%; background:rgba(255,255,255,.08); transition: background .2s; }
     .card:hover::before { background: var(--orange); }
-    .card h2 { font-family: var(--mono); font-size:1.05rem; font-weight:700; margin-bottom: 18px; color: var(--text); }
-    .card h3 { font-family: var(--mono); font-size: .85rem; font-weight: 600; margin: 28px 0 10px; color: var(--blue); }
+    .card h2 { font-family: var(--mono); font-size:1.05rem; font-weight:700; margin-bottom: 18px; color: var(--text); display: flex; align-items: center; gap: 10px; }
+    .card h3 { font-family: var(--mono); font-size: .85rem; font-weight: 600; margin-top: 28px; margin-bottom: 10px; color: var(--blue); }
     .card p { color: var(--muted); margin-bottom: 14px; font-size: .9rem; line-height: 1.7; }
 
-    .badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,.04); border: 1px solid var(--border); padding: 4px 12px; border-radius: 20px; font-family: var(--mono); font-size: .68rem; color: var(--muted); margin-bottom: 22px; }
-    .dot-live { width:6px; height:6px; border-radius:50%; background: var(--green); animation: pulse 2s infinite; display: inline-block; }
-    @keyframes pulse { 0% { box-shadow:0 0 0 0 rgba(61,255,160,.6); } 70% { box-shadow:0 0 0 8px rgba(61,255,160,0); } 100% { box-shadow:0 0 0 0 rgba(61,255,160,0); } }
+    /* === DOCS LAYOUT === */
+    .docs-layout { display: grid; grid-template-columns: 220px 1fr; gap: 40px; align-items: start; }
+    .docs-sidebar { position: sticky; top: 80px; background: rgba(255,255,255,.04); border: 1px solid var(--border); border-radius: 8px; padding: 20px; display: flex; flex-direction:column; gap: 2px; }
+    .ds-label { font-family: var(--mono); font-size: .62rem; font-weight:700; letter-spacing: 2px; text-transform: uppercase; color: var(--dim); margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+    .docs-sidebar a { font-family: var(--mono); font-size: .75rem; color: var(--muted); padding: 7px 10px; border-radius: 3px; cursor:pointer; }
+    .docs-sidebar a:hover { color: var(--text); background: rgba(255,255,255,.04); }
+    .docs-sidebar a.dsa { color: var(--orange); background: var(--orange-lo); }
 
-    .terminal-block { background: rgba(0,0,0,.5); border: 1px solid rgba(255,255,255,.08); border-radius: 6px; overflow: hidden; margin: 16px 0; font-family: var(--mono); position: relative; }
-    .terminal-header { background: rgba(255,255,255,.04); border-bottom: 1px solid rgba(255,255,255,.07); padding: 8px 14px; display: flex; align-items: center; gap: 10px; font-size: .7rem; color: var(--dim); }
-    .tdots span { width:10px; height:10px; border-radius:50%; display:inline-block; }
-    .dr { background:#ff5f57; } .dy { background:#febc2e; } .dg { background:#28c840; }
-    .terminal-body { padding: 18px 20px; font-size: .78rem; line-height: 2; color: var(--text); }
-    .copy-btn { position: absolute; top: 8px; right: 10px; background: var(--panel2); border: 1px solid var(--border); color: var(--muted); font-family: var(--mono); font-size: .6rem; padding: 4px 8px; border-radius: 3px; cursor: pointer; }
-
+    /* === HERO === */
     .hero-title { font-size: clamp(3rem, 9vw, 5.5rem); font-weight: 800; letter-spacing: -4px; line-height: .95; margin-bottom: 28px; }
     .hero-title .line2 { background: linear-gradient(120deg, var(--orange), #ff9a6b, var(--blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; background-size: 200%; animation: shimmer 4s linear infinite; }
     @keyframes shimmer { from { background-position: -200% center; } to { background-position: 200% center; } }
     .cursor { display: inline-block; width: 14px; height: 50px; background: var(--orange); vertical-align: middle; margin-left: 6px; animation: blink 1s step-end infinite; }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
+    .badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,.04); border: 1px solid var(--border); padding: 4px 12px; border-radius: 20px; font-family: var(--mono); font-size: .68rem; color: var(--muted); margin-bottom: 22px; }
+    .dot-live { width:6px; height:6px; border-radius:50%; background: var(--green); animation: pulse 2s infinite; display: inline-block; }
+    @keyframes pulse { 0% { box-shadow:0 0 0 0 rgba(61,255,160,.6); } 70% { box-shadow:0 0 0 8px rgba(61,255,160,0); } 100% { box-shadow:0 0 0 0 rgba(61,255,160,0); } }
+
+    .terminal-block { background: rgba(0,0,0,.5); border: 1px solid rgba(255,255,255,.08); border-radius: 6px; overflow: hidden; margin: 16px 0; font-family: var(--mono); }
+    .terminal-header { background: rgba(255,255,255,.04); border-bottom: 1px solid rgba(255,255,255,.07); padding: 8px 14px; display: flex; align-items: center; gap: 10px; font-size: .7rem; color: var(--dim); }
+    .tdots span { width:10px; height:10px; border-radius:50%; display:inline-block; }
+    .dr { background:#ff5f57; } .dy { background:#febc2e; } .dg { background:#28c840; }
+    .terminal-body { padding: 18px 20px; font-size: .78rem; line-height: 2; color: var(--text); }
+
     .page { display:none; animation: fadeUp .6s cubic-bezier(.16,1,.3,1) forwards; }
     .page.active { display:block; }
     @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
 
-    .grid-3 { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:20px; }
-    .feature-card { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); padding: 28px; border-radius: 8px; }
-    .section-title { font-family: var(--mono); font-size: .68rem; font-weight: 700; color: var(--dim); letter-spacing: 2.5px; text-transform: uppercase; margin: 60px 0 18px; }
-    
-    .changelog-entry { padding: 24px 0; border-bottom: 1px solid var(--border); }
-    .changelog-version { font-family: var(--mono); font-size: .72rem; font-weight: 700; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); color: var(--text); padding: 3px 10px; border-radius: 3px; display: inline-block; margin-bottom: 8px; }
-    .changelog-list { list-style: none; display: flex; flex-direction: column; gap: 6px; color: var(--muted); font-size: .85rem; }
-    .changelog-list li::before { content: '→'; color: var(--blue); margin-right: 10px; font-family: var(--mono); }
+    footer { border-top: 1px solid var(--border); padding: 40px 32px; }
+    .footer-inner { max-width: 1200px; margin:0 auto; display: flex; justify-content: space-between; align-items: center; }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a { font-family: var(--mono); font-size: .72rem; color: var(--muted); cursor: pointer; }
   </style>
 </head>
 <body>
@@ -133,6 +135,7 @@
       <a id="nav-changelog" onclick="showPage('changelog')">Changelog</a>
       <a id="nav-tos" onclick="showPage('tos')">ToS</a>
       <a id="nav-privacy" onclick="showPage('privacy')">Privacy</a>
+      <a class="nav-github" href="https://github.com/thealxlabs/conductor" target="_blank">↗ GitHub</a>
     </div>
   </div>
 </nav>
@@ -142,84 +145,93 @@
     <div class="badge"><span class="dot-live"></span> v0.9 · Open Source · Apache 2.0</div>
     <h1 class="hero-title">Automate<br><span class="line2">Everything<span class="cursor"></span></span></h1>
     <p style="color:var(--muted); font-size:1.1rem; max-width:600px; margin-bottom:40px;">
-      Conductor unifies AI providers, local tools, and external APIs into a single intelligent agent you control. Zero cloud lock-in.
+      Conductor unifies AI providers, local tools, and external APIs into a single intelligent agent you control.
     </p>
     <div class="card">
       <h2>⚡ Quick Install</h2>
       <div class="terminal-block">
         <div class="terminal-header"><div class="tdots"><span class="dr"></span><span class="dy"></span><span class="dg"></span></div><span>bash</span></div>
         <div class="terminal-body"><code>$ curl -fsSL https://conductor.sh/install.sh | bash</code></div>
-        <button class="copy-btn" onclick="copyText('curl -fsSL https://conductor.sh/install.sh | bash')">copy</button>
       </div>
-    </div>
-    <p class="section-title">// Core Pillars</p>
-    <div class="grid-3">
-      <div class="feature-card"><h3>Agentic Loop</h3><p>Multi-step reasoning with iterative tool invocation.</p></div>
-      <div class="feature-card"><h3>Plugin-Driven</h3><p>Capabilities exposed via typed JSON Schema definitions.</p></div>
-      <div class="feature-card"><h3>Local-First</h3><p>AES-256 encrypted vault. Zero cloud telemetry.</p></div>
     </div>
   </div>
 
   <div id="page-docs" class="page">
-    <div class="card">
-      <h2>Documentation</h2>
-      <p>Conductor is a local-first agentic orchestration framework. It utilizes JSON Schema-based tool definitions to allow LLMs to interact with your local environment and external APIs.</p>
+    <div class="docs-layout">
+      <aside class="docs-sidebar">
+        <div class="ds-label">Core</div>
+        <a onclick="scrollToSection('intro')">Introduction</a>
+        <a onclick="scrollToSection('arch')">Architecture</a>
+        <a onclick="scrollToSection('security')">Security</a>
+        <div class="ds-label" style="margin-top:15px">Guides</div>
+        <a onclick="scrollToSection('plugins')">Plugins</a>
+        <a onclick="scrollToSection('mcp')">MCP Server</a>
+      </aside>
+      <div class="docs-content">
+        <div id="intro" class="card">
+          <h2>Introduction</h2>
+          <p>Conductor is a local-first agentic orchestration framework. It utilizes JSON Schema-based tool definitions to allow LLMs to interact with your local environment and external APIs.</p>
+        </div>
+        <div id="arch" class="card">
+          <h2>Architecture</h2>
+          <p>Built with a modular ProviderAdapter layer, Conductor can swap backends (Claude, GPT-4, Ollama) without changing plugin logic.</p>
+        </div>
+        <div id="security" class="card">
+          <h2>Security</h2>
+          <p>Credentials are stored in an AES-256-GCM encrypted vault. Your master key is never sent to any server. Conductor maintains a strict zero-telemetry policy.</p>
+        </div>
+        <div id="plugins" class="card">
+          <h2>Plugins</h2>
+          <p>Each capability is a self-contained plugin exposing typed JSON Schema tool definitions. No glue code is required as the AI layer discovers tools natively.</p>
+        </div>
+        <div id="mcp" class="card">
+          <h2>MCP Server</h2>
+          <p>Conductor acts as a Model Context Protocol (MCP) server, allowing you to bridge your local tools into IDEs like Cursor or VS Code.</p>
+        </div>
+      </div>
     </div>
   </div>
 
   <div id="page-changelog" class="page">
     <div class="card">
       <h2>Release Notes</h2>
-      <div class="changelog-entry">
-        <div class="changelog-version">v0.9.0</div>
-        <ul class="changelog-list">
-          <li>Added support for DeepSeek-V3 via OpenRouter</li>
-          <li>Implementation of AES-256-GCM for credential storage</li>
-          <li>New Plugin: Spotify Playback Control</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-version">v0.8.5</div>
-        <ul class="changelog-list">
-          <li>Refactored ProviderAdapter for lower latency</li>
-          <li>Fixed memory leak in long-running agent loops</li>
-        </ul>
-      </div>
+      <div id="changelog-container"></div>
     </div>
   </div>
 
   <div id="page-tos" class="page">
     <div class="card">
-      <h2>Terms of Service</h2>
+      <h2>Extended Terms of Service</h2>
       <p>Last Updated: February 2026</p>
-      <h3>1. Agreement to Terms</h3>
-      <p>By using Conductor, you agree to these terms. Conductor is an automation framework; you are responsible for the actions of any agents you configure.</p>
-      <h3>2. Local Execution Risk</h3>
-      <p>Conductor executes commands on your local machine. You acknowledge that granting an AI agent access to your shell or filesystem carries inherent risks. We are not liable for any data loss or system damage.</p>
-      <h3>3. API Costs</h3>
-      <p>You are responsible for all costs incurred through third-party AI providers (OpenAI, Anthropic, etc.) connected to Conductor.</p>
+      <h3>1. Acceptance of Terms</h3>
+      <p>By accessing or using the Conductor framework, you agree to be bound by these Terms. Conductor is provided "as is" without warranty of any kind.</p>
+      <h3>2. Local Execution and Risk</h3>
+      <p>Conductor executes commands on your local machine via AI-generated logic. You acknowledge that AI models may generate unpredictable or destructive commands. You assume 100% of the liability for any actions taken by the agent on your system.</p>
+      <h3>3. Master Key Responsibility</h3>
+      <p>Encryption keys (AES-256-GCM) are stored locally. If you lose your master password, your encrypted vault is unrecoverable. We have no "reset" mechanism as we do not store your keys.</p>
+      <h3>4. Prohibited Activities</h3>
+      <p>You may not use Conductor to automate illegal acts, conduct unauthorized system penetration, or create malicious botnets.</p>
     </div>
   </div>
 
   <div id="page-privacy" class="page">
     <div class="card">
-      <h2>Privacy Policy</h2>
+      <h2>Extended Privacy Policy</h2>
       <p>Last Updated: February 2026</p>
       <h3>1. Zero Telemetry</h3>
-      <p>We do not collect, store, or sell your data. Conductor does not include tracking scripts, usage analytics, or remote logging. All operation is local.</p>
-      <h3>2. Data Flow</h3>
-      <p>Your prompts and tool outputs are sent directly to the AI providers you configure. Your API keys are stored only on your machine in an encrypted vault.</p>
-      <h3>3. Encryption</h3>
-      <p>Local configuration is protected with AES-256-GCM. Your master key never leaves your device.</p>
+      <p>Conductor does not collect usage data, crash reports, or IP addresses. Your installation is entirely private and air-gapped from our servers.</p>
+      <h3>2. Third-Party AI Providers</h3>
+      <p>Data sent to AI providers (OpenAI, Anthropic, Google) is subject to their privacy policies. Conductor does not intercept or store these interaction streams.</p>
+      <h3>3. Local Encryption</h3>
+      <p>All sensitive configuration, including API keys and secrets, is encrypted locally using AES-256-GCM before being written to disk.</p>
     </div>
   </div>
 </main>
 
 <footer>
   <div class="footer-inner">
-    <div class="footer-credit">© 2026 ALXLABS. Built for agents.</div>
+    <div class="footer-credit">© 2026 ALXLABS. Local-first.</div>
     <div class="footer-links">
-      <a onclick="showPage('changelog')">Changelog</a>
       <a onclick="showPage('tos')">ToS</a>
       <a onclick="showPage('privacy')">Privacy</a>
     </div>
@@ -227,20 +239,41 @@
 </footer>
 
 <script>
+  const PAGES = ['home', 'docs', 'changelog', 'tos', 'privacy'];
+
   function showPage(id) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
     
-    document.getElementById('page-' + id).classList.add('active');
+    const target = document.getElementById('page-' + id);
+    if(target) target.classList.add('active');
+    
     const navLink = document.getElementById('nav-' + id);
     if(navLink) navLink.classList.add('active');
+    
     window.scrollTo(0,0);
   }
 
-  function copyText(text) {
-    navigator.clipboard.writeText(text);
-    alert('Copied to clipboard');
+  function scrollToSection(id) {
+    document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
+
+  function renderChangelog() {
+    const container = document.getElementById('changelog-container');
+    container.innerHTML = `
+      <div class="changelog-entry">
+        <div class="changelog-version">v0.9.0</div>
+        <div class="changelog-date">February 2026</div>
+        <ul>
+          <li>DeepSeek V3 / R1 support added</li>
+          <li>AES-256-GCM vault security updates</li>
+          <li>New 'extended' ToS and Privacy visibility</li>
+        </ul>
+      </div>
+    `;
+  }
+
+  renderChangelog();
 </script>
 
 </body>
