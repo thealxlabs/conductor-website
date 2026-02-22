@@ -666,12 +666,12 @@
         conductor
       </div>
       <div class="nav-links">
-        <a id="nav-home" class="active" onclick="showPage('home')">Overview</a>
-        <a id="nav-docs" onclick="showPage('docs')">Docs</a>
-        <a id="nav-changelog" onclick="showPage('changelog')">Changelog</a>
-        <a id="nav-tos" onclick="showPage('tos')">Terms</a>
-        <a id="nav-privacy" onclick="showPage('privacy')">Privacy</a>
-        <a id="nav-license" onclick="showPage('license')" style="display:none"></a>
+        <a id="nav-home" class="active" onclick="showPage('home')" href="#">Overview</a>
+        <a id="nav-docs" onclick="showPage('docs')" href="#docs">Docs</a>
+        <a id="nav-changelog" onclick="showPage('changelog')" href="#changelog">Changelog</a>
+        <a id="nav-tos" onclick="showPage('tos')" href="#tos">Terms</a>
+        <a id="nav-privacy" onclick="showPage('privacy')" href="#privacy">Privacy</a>
+        <a id="nav-license" onclick="showPage('license')" href="#license" style="display:none"></a>
         <a class="nav-github" href="https://github.com/thealxlabs/conductor" target="_blank">
           ↗ GitHub
         </a>
@@ -850,6 +850,14 @@
         </div>
       </div>
       <p style="margin-top:16px;font-size:.82rem;color:var(--muted)">+ shell, http, calendar, memory plugins. <span style="color:var(--blue);cursor:pointer" onclick="showPage('docs');setTimeout(()=>ds('dplug'),100)">Full plugin reference →</span></p>
+
+      <!-- Legal links visible to crawlers -->
+      <div style="margin-top:60px;padding-top:32px;border-top:1px solid var(--border);display:flex;gap:24px;flex-wrap:wrap;">
+        <span style="font-family:var(--mono);font-size:.72rem;color:var(--dim);">Legal</span>
+        <a href="#tos" onclick="showPage('tos')" style="font-family:var(--mono);font-size:.72rem;color:var(--muted);transition:color .2s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Terms of Service</a>
+        <a href="#privacy" onclick="showPage('privacy')" style="font-family:var(--mono);font-size:.72rem;color:var(--muted);transition:color .2s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Privacy Policy</a>
+        <a href="#license" onclick="showPage('license')" style="font-family:var(--mono);font-size:.72rem;color:var(--muted);transition:color .2s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Apache 2.0 License</a>
+      </div>
 
     </div><!-- /home -->
 
@@ -1742,9 +1750,9 @@ Final text response delivered back to the transport</code></div>
       </div>
       <div class="footer-links">
         <a href="https://github.com/thealxlabs/conductor/releases" target="_blank">Changelog ↗</a>
-        <a onclick="showPage('license')">License</a>
-        <a onclick="showPage('tos')">Terms</a>
-        <a onclick="showPage('privacy')">Privacy</a>
+        <a href="#license" onclick="showPage('license')">License</a>
+        <a href="#tos" onclick="showPage('tos')">Terms of Service</a>
+        <a href="#privacy" onclick="showPage('privacy')">Privacy Policy</a>
         <a href="https://github.com/thealxlabs/conductor" target="_blank">GitHub ↗</a>
       </div>
     </div>
