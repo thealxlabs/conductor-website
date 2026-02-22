@@ -4,1733 +4,229 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Conductor — Advanced Agentic Orchestration</title>
-  <meta name="description" content="Conductor is an advanced agentic orchestration framework that unifies disparate tools and automates complex workflows through natural language." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg:       #080808;
-      --panel:    rgba(255,255,255,.04);
-      --panel2:   rgba(255,255,255,.07);
-      --border:   rgba(255,255,255,.09);
-      --border-hi:rgba(255,255,255,.2);
-      --text:     #ffffff;
-      --muted:    rgba(255,255,255,.5);
-      --dim:      rgba(255,255,255,.25);
-      --blue:     #4d9fff;
-      --blue-lo:  rgba(77,159,255,.12);
-      --orange:   #ff6b2b;
-      --orange-lo:rgba(255,107,43,.12);
-      --green:    #3dffa0;
-      --green-lo: rgba(61,255,160,.1);
-      --purple:   #a855f7;
-      --purple-lo:rgba(168,85,247,.08);
-      --sans:     'Syne', system-ui, sans-serif;
-      --mono:     'IBM Plex Mono', monospace;
-      --glow-b:   0 0 60px rgba(77,159,255,.2);
-      --glow-o:   0 0 60px rgba(255,107,43,.25);
+      --bg: #080808;
+      --panel: rgba(255,255,255,.04);
+      --panel2: rgba(255,255,255,.08);
+      --border: rgba(255,255,255,.09);
+      --text: #ffffff;
+      --muted: rgba(255,255,255,.5);
+      --dim: rgba(255,255,255,.2);
+      --blue: #4d9fff;
+      --orange: #ff6b2b;
+      --orange-lo: rgba(255,107,43,.1);
+      --green: #3dffa0;
+      --sans: 'Syne', system-ui, sans-serif;
+      --mono: 'IBM Plex Mono', monospace;
     }
 
     * { margin:0; padding:0; box-sizing:border-box; }
     html { scroll-behavior: smooth; }
-
     body {
-      font-family: var(--sans);
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      -webkit-font-smoothing: antialiased;
-      line-height: 1.65;
-      overflow-x: hidden;
-      background-image:
-        radial-gradient(ellipse 80% 50% at 20% -10%, rgba(255,107,43,.08) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 40% at 80% 110%, rgba(77,159,255,.07) 0%, transparent 60%);
+      font-family: var(--sans); background: var(--bg); color: var(--text);
+      line-height: 1.6; overflow-x: hidden; -webkit-font-smoothing: antialiased;
     }
 
-    /* === NOISE OVERLAY === */
+    /* Grid Background */
     body::before {
-      content:'';
-      position:fixed; inset:0;
-      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
-      opacity:.025; pointer-events:none; z-index:1000;
+      content:''; position:fixed; inset:0; z-index:0;
+      background-image: linear-gradient(rgba(255,255,255,.02) 1px, transparent 1px), 
+                        linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px);
+      background-size: 50px 50px; pointer-events:none;
     }
 
-    /* === GRID BG === */
-    body::after {
-      content:'';
-      position:fixed; inset:0;
-      background-image:
-        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
-      background-size: 60px 60px;
-      pointer-events:none; z-index:0;
-    }
-
-    ::selection { background:var(--orange); color:#fff; }
-    a { color:inherit; text-decoration:none; }
-    code {
-      font-family: var(--mono);
-      font-size:.82em;
-      color: var(--orange);
-      background: var(--orange-lo);
-      padding: 2px 6px;
-      border-radius: 3px;
-    }
-
-    /* === SCROLLBAR === */
-    ::-webkit-scrollbar { width:6px; }
-    ::-webkit-scrollbar-track { background:var(--bg); }
-    ::-webkit-scrollbar-thumb { background:var(--border-hi); border-radius:3px; }
-
-    /* === NAV === */
     nav {
-      position: fixed; top:0; width:100%;
-      background: rgba(8,8,8,.75);
-      backdrop-filter: blur(24px) saturate(1.8);
-      -webkit-backdrop-filter: blur(24px) saturate(1.8);
-      border-bottom: 1px solid rgba(255,255,255,.08);
-      z-index: 999;
+      position: fixed; top:0; width:100%; z-index: 1000;
+      background: rgba(8,8,8,.8); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
     }
     .nav-inner {
-      max-width: 1200px; margin: 0 auto;
-      padding: 0 32px; height: 60px;
+      max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 64px;
       display: flex; justify-content: space-between; align-items: center;
     }
-    .logo {
-      font-family: var(--mono);
-      font-size: 1rem; font-weight: 700;
-      color: var(--text); letter-spacing: -.5px;
-      display: flex; align-items: center; gap: 10px;
-      cursor: pointer;
-    }
-    .logo-mark {
-      width: 28px; height: 28px;
-      background: linear-gradient(135deg, var(--orange), #ff9a6b);
-      border-radius: 4px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: .65rem; color: #fff; font-weight: 700;
-      box-shadow: var(--glow-o);
-    }
-    .nav-links { display: flex; gap: 2px; align-items: center; }
+    .logo { font-family: var(--mono); font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 1.1rem; }
+    .nav-links { display: flex; gap: 4px; overflow-x: auto; }
     .nav-links a {
-      color: var(--muted); font-size: .8rem; font-weight: 600;
-      padding: 6px 14px; border-radius: 4px;
-      transition: all .2s; cursor: pointer;
-      letter-spacing: .3px;
+      color: var(--muted); font-size: .7rem; font-family: var(--mono);
+      padding: 6px 10px; border-radius: 4px; cursor: pointer; transition: .2s;
+      white-space: nowrap;
     }
-    .nav-links a:hover { color: var(--text); background: rgba(255,255,255,.05); }
-    .nav-links a.active { color: var(--text); background: rgba(255,255,255,.07); }
-    .nav-github {
-      display: flex; align-items: center; gap: 6px;
-      color: var(--muted) !important;
-      border: 1px solid var(--border) !important;
-      font-size: .75rem !important;
-    }
-    .nav-github:hover { border-color: var(--border-hi) !important; color: var(--text) !important; }
+    .nav-links a:hover, .nav-links a.active { color: var(--text); background: var(--panel); }
 
-    /* === LAYOUT === */
-    .app { display:flex; flex-direction:column; min-height:100vh; }
-    main {
-      flex:1; padding: 90px 32px 80px;
-      max-width:1200px; margin:0 auto; width:100%;
-      position: relative; z-index:1;
-    }
+    main { max-width: 900px; margin: 0 auto; padding: 120px 24px 80px; position: relative; z-index: 1; }
+    
+    .page { display: none; animation: fadeIn .4s ease forwards; }
+    .page.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* === FOOTER === */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 28px 32px;
-      position: relative; z-index: 1;
-    }
-    .footer-inner {
-      max-width: 1200px; margin:0 auto;
-      display: flex; justify-content: space-between; align-items: center;
-      flex-wrap: wrap; gap: 16px;
-    }
-    .footer-credit {
-      font-family: var(--mono); font-size: .75rem; color: var(--muted);
-      display: flex; align-items: center; gap: 6px;
-    }
-    .footer-credit a { color: var(--blue); }
-    .footer-links { display: flex; gap: 24px; }
-    .footer-links a {
-      font-family: var(--mono); font-size: .72rem; color: var(--muted);
-      transition: color .2s; cursor: pointer;
-    }
-    .footer-links a:hover { color: var(--text); }
-
-    /* === ANIMATIONS === */
-    @keyframes fadeUp {
-      from { opacity:0; transform:translateY(20px); }
-      to   { opacity:1; transform:translateY(0); }
-    }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
-    @keyframes pulse {
-      0%   { box-shadow:0 0 0 0 rgba(61,255,160,.6); }
-      70%  { box-shadow:0 0 0 8px rgba(61,255,160,0); }
-      100% { box-shadow:0 0 0 0 rgba(61,255,160,0); }
-    }
-    @keyframes shimmer {
-      from { background-position: -200% center; }
-      to   { background-position:  200% center; }
-    }
-    @keyframes float {
-      0%,100% { transform:translateY(0); }
-      50%     { transform:translateY(-6px); }
-    }
-    @keyframes gradRotate {
-      0%   { filter: hue-rotate(0deg); }
-      100% { filter: hue-rotate(360deg); }
-    }
-
-    .fade-in { animation: fadeUp .6s cubic-bezier(.16,1,.3,1) forwards; }
-
-    /* === CARD === */
-    .card {
-      background: rgba(255,255,255,.04);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,.09);
-      padding: 32px; border-radius: 8px;
-      transition: border-color .25s, box-shadow .25s;
-      position: relative; overflow: hidden;
-    }
-    .card::before {
-      content:''; position:absolute; top:0; left:0;
-      width:3px; height:100%; background:rgba(255,255,255,.08);
-      transition: background .25s;
-    }
-    .card:hover { border-color: rgba(255,255,255,.18); box-shadow: var(--glow-b); }
-    .card:hover::before { background: var(--orange); }
-    .card h2 {
-      font-family: var(--mono); font-size:1.05rem; font-weight:700;
-      margin-bottom: 18px; color: var(--text);
-      display: flex; align-items: center; gap: 10px;
-    }
-    .card h3 {
-      font-family: var(--mono); font-size: .85rem; font-weight: 600;
-      margin-bottom: 10px; margin-top: 28px; color: var(--blue);
-    }
-    .card h3:first-child { margin-top:0; }
-    .card p { color: var(--muted); margin-bottom: 14px; font-size: .9rem; line-height: 1.7; }
-    .card p:last-child { margin-bottom:0; }
-    .card > a { color: var(--blue); }
-    .card > a:hover { text-decoration: underline; }
-
-    /* === BADGE === */
-    .badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: rgba(255,255,255,.04); border: 1px solid var(--border);
-      padding: 4px 12px; border-radius: 20px;
-      font-family: var(--mono); font-size: .68rem; color: var(--muted);
-      margin-bottom: 22px;
-    }
-    .dot-live {
-      width:6px; height:6px; border-radius:50%;
-      background: var(--green);
-      animation: pulse 2s infinite;
-      display: inline-block;
-    }
-
-    /* === CALLOUT === */
-    .callout {
-      margin-top: 20px; padding: 16px 20px;
-      background: var(--blue-lo);
-      border: 1px solid rgba(79,142,247,.25);
-      border-radius: 4px;
-      font-size: .875rem; color: var(--text);
-      line-height: 1.6;
-    }
-    .callout-warn {
-      background: var(--orange-lo);
-      border-color: rgba(255,123,78,.3);
-    }
-    .callout-success {
-      background: var(--green-lo);
-      border-color: rgba(61,255,160,.25);
-    }
-
-    /* === TERMINAL === */
-    .terminal-block {
-      background: rgba(0,0,0,.5);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(255,255,255,.08);
-      border-radius: 6px; overflow: hidden;
-      margin: 16px 0; font-family: var(--mono);
-    }
-    .terminal-header {
-      background: rgba(255,255,255,.04);
-      border-bottom: 1px solid rgba(255,255,255,.07);
-      padding: 8px 14px;
-      display: flex; align-items: center; gap: 10px;
-      font-size: .7rem; color: var(--dim);
-    }
-    .tdots { display:flex; gap:5px; }
-    .tdots span {
-      width:10px; height:10px; border-radius:50%;
-    }
-    .dr { background:#ff5f57; }
-    .dy { background:#febc2e; }
-    .dg { background:#28c840; }
-    .terminal-body {
-      padding: 18px 20px;
-      font-size: .78rem; line-height: 2; overflow-x:auto;
-      color: var(--text);
-    }
-    .terminal-body code {
-      background: none; color: inherit; padding: 0; font-size:inherit;
-    }
-    .cmd { color: var(--blue); user-select:none; }
-    .cmt { color: var(--dim); }
-    .str { color: var(--green); }
-    .key { color: var(--orange); }
-    .val { color: var(--purple); }
-
-    /* === TABLES === */
-    .plugin-table {
-      width: 100%; border-collapse: collapse; margin-top: 16px;
-      font-size: .82rem;
-    }
-    .plugin-table th {
-      font-family: var(--mono); font-size: .68rem; font-weight: 700;
-      color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase;
-      padding: 10px 14px; text-align: left;
-      border-bottom: 1px solid var(--border);
-    }
-    .plugin-table td {
-      padding: 11px 14px;
-      border-bottom: 1px solid rgba(255,255,255,.04);
-      color: var(--muted); font-size: .83rem;
-      vertical-align: middle;
-    }
-    .plugin-table td:first-child {
-      font-family: var(--mono); color: var(--text); font-weight: 500;
-    }
-    .plugin-table tr:last-child td { border-bottom: none; }
-    .plugin-table tr:hover td { background: rgba(255,255,255,.02); }
-
-    .sp {
-      font-family: var(--mono); font-size: .65rem; font-weight: 700;
-      padding: 3px 8px; border-radius: 3px; letter-spacing: .5px;
-    }
-    .s-stable { background: var(--green-lo); color: var(--green); border: 1px solid rgba(61,255,160,.2); }
-    .s-beta   { background: var(--orange-lo); color: var(--orange); border: 1px solid rgba(255,123,78,.2); }
-    .s-wip    { background: rgba(255,255,255,.05); color: var(--dim); border: 1px solid var(--border); }
-
-    /* === TECH LIST === */
-    .tech-list {
-      list-style: none; padding: 0;
-      display: flex; flex-direction: column; gap: 10px;
-    }
-    .tech-list li {
-      padding: 12px 16px;
-      background: rgba(255,255,255,.03);
-      border: 1px solid rgba(255,255,255,.08);
-      border-radius: 4px; border-left: 3px solid rgba(255,255,255,.15);
-      font-size: .875rem; color: var(--muted);
-      transition: border-color .2s, background .2s;
-    }
-    .tech-list li:hover { border-left-color: var(--orange); background: rgba(255,107,43,.04); }
-    .tech-list li strong { color: var(--text); }
-
-    /* === GRID === */
-    .grid-2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:20px; }
-    .grid-3 { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:20px; }
-    .grid-4 { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; }
-
-    /* === SECTION TITLE === */
-    .section-title {
-      font-family: var(--mono); font-size: .68rem; font-weight: 700;
-      color: var(--dim); letter-spacing: 2.5px; text-transform: uppercase;
-      margin-bottom: 18px;
-    }
-    .section-gap { margin-top: 60px; }
-
-    /* === PAGES === */
-    .page { display:none; }
-    .page.active { display:block; }
-    .page-header { margin-bottom: 48px; }
-    .page-title {
-      font-family: var(--mono); font-size: 1.6rem; font-weight: 700;
-      color: var(--text); margin-bottom: 10px; letter-spacing: -1px;
-    }
-    .page-sub { color: var(--muted); font-size: .95rem; }
-
-    /* ====================================================
-       HOME PAGE
-    ==================================================== */
-    .hero {
-      padding: 80px 0 72px;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 72px;
-      position: relative;
-    }
-    .hero-glow {
-      position: absolute; top: -100px; right: -200px;
-      width: 700px; height: 700px;
-      background: radial-gradient(circle, rgba(255,107,43,.06) 0%, transparent 70%);
-      pointer-events: none;
-    }
-    .hero-eyebrow {
-      font-family: var(--mono); font-size: .72rem; font-weight: 700;
-      letter-spacing: 3px; text-transform: uppercase;
-      color: var(--orange); margin-bottom: 20px;
-      display: flex; align-items: center; gap: 8px;
-    }
-    .hero-eyebrow::before {
-      content:''; display:inline-block;
-      width: 24px; height: 2px; background: var(--orange);
-    }
-    .hero-title {
-      font-size: clamp(3rem, 9vw, 5.5rem); font-weight: 800;
-      letter-spacing: -4px; line-height: .95;
-      margin-bottom: 28px;
-    }
-    .hero-title .line1 { color: var(--text); display:block; }
-    .hero-title .line2 {
-      display: block;
-      background: linear-gradient(120deg, var(--orange), #ff9a6b, var(--blue));
-      background-size: 200%;
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      background-clip: text;
-      animation: shimmer 4s linear infinite;
-    }
-    .cursor {
-      display: inline-block;
-      width: clamp(12px,1.5vw,18px); height: clamp(36px,5vw,52px);
-      background: var(--orange);
-      vertical-align: middle;
-      margin-left: 6px;
-      animation: blink 1s step-end infinite;
-      box-shadow: 0 0 20px rgba(255,107,43,.6);
-    }
-    .hero-sub {
-      color: var(--muted); font-size: 1.1rem;
-      max-width: 560px; margin-bottom: 40px; line-height: 1.75;
-    }
-    .hero-actions { display:flex; gap:12px; flex-wrap:wrap; }
-    .btn {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: var(--orange); color: #fff;
-      padding: 12px 24px; font-family: var(--mono);
-      font-weight: 700; font-size: .82rem;
-      border-radius: 4px; transition: all .2s;
-      border: none; cursor: pointer;
-      letter-spacing: .3px;
-      box-shadow: 0 0 24px rgba(255,107,43,.35);
-    }
-    .btn:hover { background: #ff8550; box-shadow: 0 0 36px rgba(255,107,43,.55); transform: translateY(-1px); }
-    .btn-ghost {
-      background: transparent; color: var(--muted);
-      border: 1px solid var(--border);
-      box-shadow: none;
-    }
-    .btn-ghost:hover { background: rgba(255,255,255,.05); color: var(--text); transform: none; box-shadow: none; }
-
-    .stats-row {
-      display: flex; gap: 48px; flex-wrap: wrap;
-      margin-top: 56px; padding-top: 44px;
-      border-top: 1px solid var(--border);
-    }
-    .stat-num {
-      font-family: var(--mono); font-size: 2.2rem; font-weight: 700;
-      color: var(--text); line-height: 1;
-    }
-    .stat-num span { color: var(--orange); }
-    .stat-label { font-size: .75rem; color: var(--muted); margin-top: 5px; letter-spacing: .5px; }
-
-    /* === FEATURE CARDS === */
-    .feature-card {
-      background: rgba(255,255,255,.04);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,.08);
-      padding: 28px; border-radius: 8px;
-      transition: all .25s; cursor: default;
-      position: relative; overflow: hidden;
-    }
-    .feature-card::after {
-      content:''; position:absolute; inset:0;
-      background: linear-gradient(135deg, rgba(255,107,43,.05) 0%, transparent 60%);
-      opacity:0; transition: opacity .25s;
-    }
-    .feature-card:hover { border-color: rgba(255,107,43,.25); box-shadow: var(--glow-o); }
-    .feature-card:hover::after { opacity:1; }
-    .feature-icon {
-      width: 40px; height: 40px;
-      background: var(--orange-lo); border: 1px solid rgba(255,107,43,.2);
-      border-radius: 8px; display:flex; align-items:center; justify-content:center;
-      font-size: 1.1rem; margin-bottom: 16px;
-    }
-    .feature-card h3 {
-      font-size: .9rem; font-weight: 700; margin-bottom: 8px; color: var(--text);
-    }
-    .feature-card p { font-size: .82rem; color: var(--muted); line-height:1.65; }
-
-    /* === PROVIDER PILLS === */
-    .provider-grid { display:flex; flex-wrap:wrap; gap:8px; margin: 14px 0; }
-    .provider-pill {
-      font-family: var(--mono); font-size: .72rem;
-      background: var(--panel2); border: 1px solid var(--border);
-      color: var(--muted); padding: 5px 12px; border-radius: 3px;
-      transition: all .2s;
-    }
-    .provider-pill:hover { border-color: var(--border-hi); color: var(--text); }
-
-    /* === DOCS LAYOUT === */
-    .docs-layout {
-      display: grid;
-      grid-template-columns: 220px 1fr;
-      gap: 40px;
-      align-items: start;
-    }
-    @media (max-width: 768px) {
-      .docs-layout { grid-template-columns: 1fr; }
-      .docs-sidebar { display:none; }
-    }
-    .docs-sidebar {
-      position: sticky; top: 80px;
-      background: rgba(255,255,255,.04);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255,255,255,.09);
-      border-radius: 8px; padding: 20px;
-      display: flex; flex-direction:column; gap: 2px;
-    }
-    .ds-label {
-      font-family: var(--mono); font-size: .62rem; font-weight:700;
-      letter-spacing: 2px; text-transform: uppercase; color: var(--dim);
-      margin-bottom: 10px; padding-bottom: 10px;
-      border-bottom: 1px solid var(--border);
-    }
-    .docs-sidebar a {
-      font-family: var(--mono); font-size: .75rem; color: var(--muted);
-      padding: 7px 10px; border-radius: 3px;
-      cursor:pointer; transition: all .15s;
-      display: flex; align-items: center; gap: 8px;
-    }
-    .docs-sidebar a:hover { color: var(--text); background: rgba(255,255,255,.04); }
-    .docs-sidebar a.dsa { color: var(--orange); background: var(--orange-lo); }
-
-    .docs-content { display:flex; flex-direction:column; gap:24px; }
-
-    /* ====================================================
-       HERO TERMINAL (home page)
-    ==================================================== */
-    .hero-terminal {
-      background: #030306; border: 1px solid var(--border);
-      border-radius: 8px; overflow: hidden;
-      margin-top: 56px; box-shadow: 0 40px 80px rgba(0,0,0,.6), var(--glow-b);
-    }
-    .ht-header {
-      background: var(--panel2); border-bottom: 1px solid var(--border);
-      padding: 12px 18px; display: flex; align-items: center; gap: 12px;
-    }
-    .ht-header .tdots span { width:12px; height:12px; }
-    .ht-title { font-family: var(--mono); font-size: .72rem; color: var(--dim); }
-    .ht-body { padding: 24px 24px; font-family: var(--mono); font-size: .8rem; line-height: 2.2; }
-
-    /* === PLUGIN SPOTLIGHT CARDS === */
-    .plugin-spotlight {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 16px; margin-top: 20px;
-    }
-    .plugin-card {
-      background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08);
-      border-radius: 6px; padding: 20px; transition: all .2s;
-    }
-    .plugin-card:hover { border-color: rgba(255,107,43,.25); transform: translateY(-2px); box-shadow: var(--glow-o); }
-    .plugin-card-head {
-      display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 10px;
-    }
-    .plugin-card-name { font-family: var(--mono); font-size: .85rem; font-weight: 700; color: var(--text); }
-    .plugin-card-tools { font-family: var(--mono); font-size: .7rem; color: var(--dim); }
-    .plugin-card p { font-size: .8rem; color: var(--muted); margin-bottom: 12px; line-height: 1.6; }
-    .plugin-card-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-    .tag {
-      font-family: var(--mono); font-size: .62rem;
-      background: rgba(255,255,255,.04); border: 1px solid var(--border);
-      color: var(--dim); padding: 2px 8px; border-radius: 3px;
-    }
-
-    /* === QUICK COPY === */
-    .copy-wrap {
-      position: relative;
-    }
-    .copy-btn {
-      position: absolute; top: 10px; right: 10px;
-      background: var(--panel2); border: 1px solid var(--border);
-      color: var(--muted); font-family: var(--mono); font-size: .65rem;
-      padding: 4px 10px; border-radius: 3px; cursor: pointer;
-      transition: all .15s;
-    }
-    .copy-btn:hover { color: var(--text); border-color: var(--border-hi); }
-
-    /* === ARCH DIAGRAM === */
-    .arch-diagram {
-      background: #060609; border: 1px solid var(--border);
-      border-radius: 4px; padding: 24px;
-      font-family: var(--mono); font-size: .72rem;
-      color: var(--muted); line-height: 1.8;
+    .hero-title { font-size: clamp(3rem, 8vw, 5rem); font-weight: 800; letter-spacing: -3px; line-height: 0.9; margin-bottom: 32px; }
+    .hero-title span { color: var(--orange); }
+    
+    .section-label { font-family: var(--mono); font-size: .65rem; color: var(--orange); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; display: block; }
+    
+    .card { background: var(--panel); border: 1px solid var(--border); padding: 32px; border-radius: 12px; margin-bottom: 24px; }
+    .card h2 { font-family: var(--mono); font-size: 1.25rem; margin-bottom: 16px; color: var(--text); }
+    .card h3 { font-size: 1rem; margin: 24px 0 12px; color: var(--blue); font-family: var(--mono); }
+    
+    .terminal { 
+      background: #000; border: 1px solid var(--border); padding: 16px 20px; 
+      border-radius: 8px; font-family: var(--mono); font-size: 0.85rem; 
+      position: relative; display: flex; align-items: center; justify-content: space-between;
       margin: 16px 0;
     }
-    .arch-diagram .layer { margin-bottom: 8px; }
-    .arch-diagram .layer-title { color: var(--text); font-weight: 700; margin-bottom: 4px; font-size: .68rem; letter-spacing: 2px; text-transform: uppercase; color: var(--dim); }
-    .arch-diagram .box {
-      display: inline-block;
-      background: var(--panel); border: 1px solid var(--border);
-      padding: 5px 12px; border-radius: 3px;
-      margin: 3px 4px 3px 0;
-      transition: border-color .2s;
-      color: var(--text);
+    .terminal code { color: var(--green); }
+    .copy-btn { 
+      background: var(--panel2); border: 1px solid var(--border); color: #fff; 
+      padding: 5px 10px; font-size: 0.65rem; cursor: pointer; border-radius: 4px; font-family: var(--mono);
     }
-    .arch-diagram .box:hover { border-color: var(--blue); color: var(--blue); }
-    .arch-diagram .arrow { color: var(--dim); margin: 0 6px; }
+    .copy-btn:hover { background: var(--orange); border-color: var(--orange); }
 
-    /* === ROADMAP === */
-    .roadmap-item {
-      display: flex; gap: 20px;
-      padding: 16px 0;
-      border-bottom: 1px solid var(--border);
-    }
-    .roadmap-item:last-child { border-bottom: none; }
-    .roadmap-status {
-      flex-shrink: 0; width: 80px;
-      font-family: var(--mono); font-size: .65rem; font-weight: 700;
-      text-align: center; padding-top: 2px;
-    }
-    .rs-done { color: var(--green); }
-    .rs-progress { color: var(--orange); }
-    .rs-planned { color: var(--dim); }
-    .roadmap-info h4 { font-size: .875rem; font-weight: 700; color: var(--text); margin-bottom: 4px; }
-    .roadmap-info p { font-size: .8rem; color: var(--muted); }
+    .legal-text { font-size: 0.9rem; color: var(--muted); line-height: 1.7; }
+    .legal-text p { margin-bottom: 16px; }
+    .legal-text ul { margin: 0 0 16px 20px; }
 
-    /* === CHANGELOG === */
-    .changelog-entry {
-      padding: 24px 0;
-      border-bottom: 1px solid var(--border);
-    }
-    .changelog-entry:last-child { border-bottom: none; }
-    .changelog-version {
-      font-family: var(--mono); font-size: .72rem; font-weight: 700;
-      background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12);
-      color: var(--text); padding: 3px 10px; border-radius: 3px;
-      display: inline-block; margin-bottom: 8px;
-    }
-    .changelog-date { font-family: var(--mono); font-size: .68rem; color: var(--dim); margin-bottom: 12px; }
-    .changelog-list {
-      list-style: none;
-      display: flex; flex-direction: column; gap: 6px;
-    }
-    .changelog-list li {
-      font-size: .85rem; color: var(--muted);
-      display: flex; align-items: flex-start; gap: 10px;
-    }
-    .changelog-list li::before { content: '→'; color: var(--blue); flex-shrink: 0; font-family: var(--mono); font-size: .8rem; }
-    .changelog-list .feat::before { content: '+'; color: var(--orange); font-weight: 700; }
-    .changelog-list .fix::before  { content: '✕'; color: rgba(255,255,255,.3); }
+    footer { border-top: 1px solid var(--border); padding: 40px 24px; text-align: center; font-family: var(--mono); font-size: 0.7rem; color: var(--dim); }
 
-    /* === RESPONSIVE === */
-    @media (max-width: 640px) {
-      .nav-links a { padding: 6px 8px; font-size: .75rem; }
-      main { padding: 80px 20px 60px; }
-      .hero-title { letter-spacing: -2px; }
-      .stats-row { gap: 28px; }
+    @media (max-width: 600px) {
+      .hero-title { font-size: 3rem; }
+      .nav-inner { padding: 0 16px; }
+      .card { padding: 20px; }
     }
   </style>
 </head>
 <body>
-<div class="app">
 
-  <nav>
-    <div class="nav-inner">
-      <div class="logo" onclick="showPage('home')">
-        <div class="logo-mark">⌁</div>
-        conductor
-      </div>
-      <div class="nav-links">
-        <a id="nav-home" class="active" onclick="showPage('home')">Overview</a>
-        <a id="nav-docs" onclick="showPage('docs')">Docs</a>
-        <a id="nav-changelog" onclick="showPage('changelog')" style="display:none"></a>
-        <a id="nav-license" onclick="showPage('license')" style="display:none"></a>
-        <a id="nav-tos" onclick="showPage('tos')" style="display:none"></a>
-        <a id="nav-privacy" onclick="showPage('privacy')" style="display:none"></a>
-        <a class="nav-github" href="https://github.com/thealxlabs/conductor" target="_blank">
-          ↗ GitHub
-        </a>
+<nav>
+  <div class="nav-inner">
+    <div class="logo" onclick="showPage('home')">⌁ CONDUCTOR</div>
+    <div class="nav-links">
+      <a id="link-home" class="active" onclick="showPage('home')">OVERVIEW</a>
+      <a id="link-docs" onclick="showPage('docs')">DOCS</a>
+      <a id="link-changelog" onclick="showPage('changelog')">CHANGELOG</a>
+      <a id="link-license" onclick="showPage('license')">LICENSE</a>
+      <a id="link-tos" onclick="showPage('tos')">TOS</a>
+      <a id="link-privacy" onclick="showPage('privacy')">PRIVACY</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <section id="page-home" class="page active">
+    <span class="section-label">// Orchestration Engine</span>
+    <h1 class="hero-title">Automate<br><span>Everything.</span></h1>
+    <div class="card">
+      <h2>Quick Install</h2>
+      <p style="color:var(--muted); margin-bottom:12px;">Run the setup wizard to configure your local environment and AI providers.</p>
+      <div class="terminal">
+        <code>curl -fsSL https://conductor.sh/install.sh | bash</code>
+        <button class="copy-btn" onclick="copy('curl -fsSL https://conductor.sh/install.sh | bash', this)">COPY</button>
       </div>
     </div>
-  </nav>
-
-  <main>
-
-    <!-- ██████████████ HOME PAGE ██████████████ -->
-    <div id="page-home" class="page active fade-in">
-
-      <div class="hero">
-        <div class="hero-glow"></div>
-        <div class="badge">
-          <span class="dot-live"></span>
-          v0.9 · Open Source · Apache 2.0 Licensed
-        </div>
-
-        <div class="hero-eyebrow">Agentic Orchestration Framework</div>
-
-        <h1 class="hero-title">
-          <span class="line1">Automate</span>
-          <span class="line2">Everything<span class="cursor"></span></span>
-        </h1>
-
-        <p class="hero-sub">
-          Conductor unifies AI providers, local tools, and external APIs into a single intelligent agent you control. Natural language. Zero cloud lock-in. Runs on your machine.
-        </p>
-
-        <div class="hero-actions">
-          <button class="btn" onclick="showPage('docs')">→ Read the Docs</button>
-          <a class="btn btn-ghost" href="https://github.com/thealxlabs/conductor" target="_blank">GitHub ↗</a>
-        </div>
-
-        <div class="stats-row">
-          <div>
-            <div class="stat-num">25<span>+</span></div>
-            <div class="stat-label">Plugins</div>
-          </div>
-          <div>
-            <div class="stat-num">150<span>+</span></div>
-            <div class="stat-label">Tools</div>
-          </div>
-          <div>
-            <div class="stat-num">5</div>
-            <div class="stat-label">AI Backends</div>
-          </div>
-          <div>
-            <div class="stat-num">0</div>
-            <div class="stat-label">Telemetry</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- WHAT IS CONDUCTOR -->
-      <p class="section-title">// What Conductor Is</p>
-      <div class="grid-3">
-        <div class="feature-card">
-          <div class="feature-icon">⚡</div>
-          <h3>Agentic Loop</h3>
-          <p>Multi-step reasoning with iterative tool invocation. Conductor thinks, calls tools, processes results, and loops — automatically — until the task is done.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">🔌</div>
-          <h3>Plugin-Driven</h3>
-          <p>Each capability is a self-contained plugin exposing typed JSON Schema tool definitions. No glue code — the AI layer discovers and uses tools natively.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">🔒</div>
-          <h3>Local-First Security</h3>
-          <p>AES-256-GCM encrypted credential vault. Zero cloud telemetry. No AlxLabs servers in the request chain. Your data, your machine, your rules.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">🔀</div>
-          <h3>Provider Agnostic</h3>
-          <p>Claude, GPT-4o, Gemini 1.5, and Ollama — all behind a unified ProviderAdapter. Switch AI backends in one command without touching your plugins.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">📡</div>
-          <h3>Multi-Transport</h3>
-          <p>Same agent, multiple interfaces: interactive CLI, REST API, Telegram bot remote, and MCP server for IDE integration. All run simultaneously.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">🌐</div>
-          <h3>Offline Capable</h3>
-          <p>Pair with Ollama for a fully offline setup. Local plugins — notes, files, shell — work without any internet connection whatsoever.</p>
-        </div>
-      </div>
-
-      <!-- QUICK DEPLOY -->
-      <p class="section-title section-gap">// Get Running in 2 Minutes</p>
-      <div class="card">
-        <h2>⚡ Quick Install</h2>
-        <p>The one-liner handles Node.js dependency checking, directory setup, and launches the interactive 14-step configuration wizard.</p>
-
-        <h3 style="color:var(--green)">macOS / Linux</h3>
-        <div class="terminal-block copy-wrap">
-          <div class="terminal-header"><div class="tdots"><span class="dr"></span><span class="dy"></span><span class="dg"></span></div><span>bash</span></div>
-          <div class="terminal-body"><code><span class="cmd">$</span> curl -fsSL https://raw.githubusercontent.com/thealxlabs/conductor/main/install.sh | bash</code></div>
-          <button class="copy-btn" onclick="copyText(this,'curl -fsSL https://raw.githubusercontent.com/thealxlabs/conductor/main/install.sh | bash')">copy</button>
-        </div>
-
-        <h3 style="color:var(--blue)">Windows (PowerShell, run as Admin)</h3>
-        <div class="terminal-block copy-wrap">
-          <div class="terminal-header"><div class="tdots"><span class="dr"></span><span class="dy"></span><span class="dg"></span></div><span>powershell</span></div>
-          <div class="terminal-body"><code><span class="cmd">></span> irm https://raw.githubusercontent.com/thealxlabs/conductor/main/install.ps1 | iex</code></div>
-          <button class="copy-btn" onclick="copyText(this,'irm https://raw.githubusercontent.com/thealxlabs/conductor/main/install.ps1 | iex')">copy</button>
-        </div>
-
-        <p style="margin-top:16px;font-size:.85rem;">Full details on the <span style="color:var(--blue);cursor:pointer" onclick="showPage('docs')">Docs</span> page, including manual clone instructions.</p>
-      </div>
-
-      <!-- PLUGIN ECOSYSTEM -->
-      <p class="section-title section-gap">// Plugin Ecosystem</p>
-      <div class="plugin-spotlight">
-        <div class="plugin-card">
-          <div class="plugin-card-head">
-            <span class="plugin-card-name">spotify</span>
-            <span class="plugin-card-tools">18 tools · <span class="sp s-stable">stable</span></span>
-          </div>
-          <p>Full playback control, queue management, search, playlist editing, and device switching via the Spotify Web API.</p>
-          <div class="plugin-card-tags">
-            <span class="tag">play/pause</span><span class="tag">queue</span><span class="tag">search</span><span class="tag">playlists</span>
-          </div>
-        </div>
-        <div class="plugin-card">
-          <div class="plugin-card-head">
-            <span class="plugin-card-name">notes</span>
-            <span class="plugin-card-tools">12 tools · <span class="sp s-stable">stable</span></span>
-          </div>
-          <p>Encrypted local markdown vault with full-text indexing, tag support, and fast fuzzy search across all your notes.</p>
-          <div class="plugin-card-tags">
-            <span class="tag">create</span><span class="tag">search</span><span class="tag">encrypt</span><span class="tag">index</span>
-          </div>
-        </div>
-        <div class="plugin-card">
-          <div class="plugin-card-head">
-            <span class="plugin-card-name">files</span>
-            <span class="plugin-card-tools">11 tools · <span class="sp s-stable">stable</span></span>
-          </div>
-          <p>Local filesystem read, write, move, copy, search, and manage operations with sandboxed path constraints.</p>
-          <div class="plugin-card-tags">
-            <span class="tag">read</span><span class="tag">write</span><span class="tag">search</span><span class="tag">manage</span>
-          </div>
-        </div>
-        <div class="plugin-card">
-          <div class="plugin-card-head">
-            <span class="plugin-card-name">telegram</span>
-            <span class="plugin-card-tools">8 tools · <span class="sp s-stable">stable</span></span>
-          </div>
-          <p>Remote control your Conductor from anywhere via Telegram. User-ID whitelisted — only you can access your agent.</p>
-          <div class="plugin-card-tags">
-            <span class="tag">remote</span><span class="tag">chat</span><span class="tag">secure</span>
-          </div>
-        </div>
-        <div class="plugin-card">
-          <div class="plugin-card-head">
-            <span class="plugin-card-name">gmail</span>
-            <span class="plugin-card-tools">9 tools · <span class="sp s-beta">beta</span></span>
-          </div>
-          <p>Read, compose, send, and label Gmail via OAuth 2.0 minimal scopes. Tokens stored in your local encrypted vault.</p>
-          <div class="plugin-card-tags">
-            <span class="tag">read</span><span class="tag">compose</span><span class="tag">labels</span>
-          </div>
-        </div>
-        <div class="plugin-card">
-          <div class="plugin-card-head">
-            <span class="plugin-card-name">browser</span>
-            <span class="plugin-card-tools">7 tools · <span class="sp s-beta">beta</span></span>
-          </div>
-          <p>Headless Chromium for web browsing, content extraction, form filling, and screenshot capture — fully automated.</p>
-          <div class="plugin-card-tags">
-            <span class="tag">scrape</span><span class="tag">navigate</span><span class="tag">screenshot</span>
-          </div>
-        </div>
-      </div>
-      <p style="margin-top:16px;font-size:.82rem;color:var(--muted)">+ shell, http, calendar, memory plugins. <span style="color:var(--blue);cursor:pointer" onclick="showPage('docs');setTimeout(()=>ds('dplug'),100)">Full plugin reference →</span></p>
-
-    </div><!-- /home -->
-
-
-    <!-- ██████████████ DOCS PAGE ██████████████ -->
-    <div id="page-docs" class="page fade-in">
-      <div class="page-header">
-        <h1 class="page-title">DOCUMENTATION.md</h1>
-        <p class="page-sub">Full technical reference — installation, configuration, providers, plugins, CLI, architecture, MCP, Telegram, and more.</p>
-      </div>
-
-      <div class="docs-layout">
-        <aside class="docs-sidebar">
-          <span class="ds-label">Contents</span>
-          <a onclick="ds('di',this)">☁ Installation</a>
-          <a onclick="ds('dc',this)">⚡ How It Works</a>
-          <a onclick="ds('dprov',this)">⬡ AI Providers</a>
-          <a onclick="ds('dplug',this)">⬣ Plugins</a>
-          <a onclick="ds('dsec',this)">🔒 Security</a>
-          <a onclick="ds('dcli',this)">⌨ CLI Reference</a>
-          <a onclick="ds('dmcp',this)">⬡ MCP Server</a>
-          <a onclick="ds('dtg',this)">✈ Telegram Bot</a>
-          <a onclick="ds('dslack',this)">💬 Slack Bot</a>
-          <a onclick="ds('dgauth',this)">🔑 Google OAuth</a>
-          <a onclick="ds('ddev',this)">🛠 Development</a>
-          <a onclick="ds('dts',this)">🔧 Troubleshooting</a>
-          <a onclick="ds('dfaq',this)">? FAQ</a>
-        </aside>
-
-        <div class="docs-content">
-
-          <!-- REAL INSTALLATION -->
-
-          <!-- INSTALLATION -->
-          <div class="card" id="di">
-            <h2>☁ Installation</h2>
-            <p>Conductor is a TypeScript project that compiles to Node.js. It requires <strong style="color:var(--text)">Node.js 18+</strong>, <strong style="color:var(--text)">npm</strong>, and <strong style="color:var(--text)">Python 3.6+</strong> (used by the installer for config file merging). The interactive installer handles everything else — cloning, building, linking the <code>conductor</code> CLI globally, and walking you through 15 setup steps.</p>
-
-            <h3 style="color:var(--green)">macOS / Linux</h3>
-            <div class="terminal-block copy-wrap">
-              <div class="terminal-header"><div class="tdots"><span class="dr"></span><span class="dy"></span><span class="dg"></span></div><span>bash</span></div>
-              <div class="terminal-body"><code><span class="cmd">$</span> curl -fsSL https://raw.githubusercontent.com/thealxlabs/conductor/main/install.sh | bash</code></div>
-              <button class="copy-btn" onclick="copyText(this,'curl -fsSL https://raw.githubusercontent.com/thealxlabs/conductor/main/install.sh | bash')">copy</button>
-            </div>
-
-            <h3 style="color:var(--blue)">Windows — PowerShell (run as Admin)</h3>
-            <div class="terminal-block copy-wrap">
-              <div class="terminal-header"><div class="tdots"><span class="dr"></span><span class="dy"></span><span class="dg"></span></div><span>powershell</span></div>
-              <div class="terminal-body"><code><span class="cmd">></span> irm https://raw.githubusercontent.com/thealxlabs/conductor/main/install.ps1 | iex</code></div>
-              <button class="copy-btn" onclick="copyText(this,'irm https://raw.githubusercontent.com/thealxlabs/conductor/main/install.ps1 | iex')">copy</button>
-            </div>
-
-            <h3 style="color:var(--orange)">If you have the source / modified the code</h3>
-            <p>Use <code>local-install.sh</code> instead — it builds from your current directory and links it globally without cloning from GitHub:</p>
-            <div class="terminal-block">
-              <div class="terminal-header"><div class="tdots"><span class="dr"></span><span class="dy"></span><span class="dg"></span></div><span>bash</span></div>
-              <div class="terminal-body"><code><span class="cmd">$</span> git clone https://github.com/thealxlabs/conductor.git
-<span class="cmd">$</span> cd conductor
-<span class="cmd">$</span> bash local-install.sh</code></div>
-            </div>
-
-            <h3>What the installer actually does</h3>
-            <p>The installer is a self-contained bash script (<code>install.sh</code>) with 15 interactive steps. Each step is skippable. Here's what happens in order:</p>
-            <ul class="tech-list">
-              <li><strong>Step 01 — Preflight</strong>: Checks for Node.js ≥18, npm, Python 3, git, curl. Creates <code>~/.conductor/{keychain,plugins,logs}</code> with 0700 permissions.</li>
-              <li><strong>Step 02 — Install &amp; Build</strong>: Clones the repo to <code>~/.conductor-src</code> (or updates if already there), runs <code>npm install</code>, then <code>npm run build</code> to compile TypeScript. Links the <code>conductor</code> binary globally via <code>npm link</code> with a fallback to <code>~/.local/bin</code>.</li>
-              <li><strong>Step 03 — AI Provider</strong>: Choose Claude, OpenAI, Gemini, OpenRouter, Ollama, or skip. API keys are encrypted immediately using AES-256-GCM and stored in the keychain — never written to <code>config.json</code> in plaintext.</li>
-              <li><strong>Step 04 — Memory Plugin</strong>: Enabled by default. Uses keyword search unless you also provide an OpenAI key, which enables semantic (vector) search.</li>
-              <li><strong>Step 05 — Google Services</strong>: Enables Gmail, Google Calendar, and Google Drive plugins. Auth happens separately via <code>conductor auth google</code>, which opens a browser OAuth flow.</li>
-              <li><strong>Step 06 — Notion</strong>: Optional. Verifies your integration token against the Notion API before saving.</li>
-              <li><strong>Step 07 — X (Twitter)</strong>: Optional. Read-only (Bearer Token) or full write access (Bearer + OAuth 1.0a). Bearer token is verified against the API.</li>
-              <li><strong>Step 08 — Spotify</strong>: Optional. Requires a Client ID and Access Token from your Spotify Developer App. Token is verified against <code>/v1/me</code> before saving.</li>
-              <li><strong>Step 09 — GitHub Actions</strong>: Optional. PAT is verified against <code>api.github.com/user</code>. Requires <code>repo, workflow, notifications, read:user</code> scopes.</li>
-              <li><strong>Step 10 — Vercel</strong>: Optional. Token verified against <code>api.vercel.com/v2/user</code>. Supports team scope configuration.</li>
-              <li><strong>Step 11 — n8n</strong>: Optional. Works with self-hosted or n8n Cloud. Verifies API key against <code>/api/v1/health</code>.</li>
-              <li><strong>Step 12 — Notes &amp; Scheduler</strong>: Always enabled. Zero config — notes go to <code>~/.conductor/notes/</code>, cron state to <code>~/.conductor/scheduler.json</code>.</li>
-              <li><strong>Step 13 — Telegram Bot</strong>: Optional. Token verified against <code>api.telegram.org/bot.../getMe</code>. The bot username is confirmed before saving.</li>
-              <li><strong>Step 14 — Slack Bot</strong>: Optional. Requires a Bot OAuth Token (<code>xoxb-</code>) and App-Level Token (<code>xapp-</code>) from api.slack.com/apps.</li>
-              <li><strong>Step 15 — MCP for Claude Desktop</strong>: Auto-detects the Claude Desktop config path for your OS and writes the <code>conductor</code> entry to <code>mcpServers</code>. Backs up any existing config first.</li>
-            </ul>
-
-            <h3>System Requirements</h3>
-            <table class="plugin-table">
-              <thead><tr><th>Requirement</th><th>Minimum</th><th>Recommended</th></tr></thead>
-              <tbody>
-                <tr><td>Node.js</td><td>18.x</td><td>20.x LTS or 22.x</td></tr>
-                <tr><td>Python</td><td>3.6</td><td>3.11+ (used by installer only)</td></tr>
-                <tr><td>RAM</td><td>256 MB</td><td>1 GB+</td></tr>
-                <tr><td>OS</td><td colspan="2">macOS 12+, Ubuntu 20.04+, Windows 11 (PowerShell 5+)</td></tr>
-              </tbody>
-            </table>
-
-            <div class="callout callout-success">
-              The installer is idempotent — if it fails midway, just re-run it. It will update your existing source and skip already-configured steps.
-            </div>
-          </div>
-
-          <!-- HOW IT WORKS -->
-          <div class="card" id="dc">
-            <h2>⚡ How It Works</h2>
-            <p>Conductor is a TypeScript application. When you run <code>conductor start</code> (or send a message via Telegram/Slack), it spins up an AI conversation loop that has access to every tool exposed by your enabled plugins. You talk to it in plain English — it decides which tools to call, calls them, processes the results, and responds.</p>
-
-            <h3>The Agent Loop</h3>
-            <p>Every message you send goes through the same pipeline:</p>
-            <div class="terminal-block">
-              <div class="terminal-header"><span>request flow</span></div>
-              <div class="terminal-body"><code><span class="cmt">── Input ─────────────────────────────────────────────────</span>
-CLI prompt / Telegram message / Slack mention / MCP call
-                    ↓
-<span class="cmt">── AIManager.chat() ──────────────────────────────────────</span>
-Conversation history + all enabled plugin tool schemas
-sent to your configured provider (Claude / GPT / Gemini / Ollama)
-                    ↓
-<span class="cmt">── Model responds ────────────────────────────────────────</span>
-If stop_reason = "tool_use"  →  PluginManager.execute(tool, args)
-If stop_reason = "end_turn"  →  return text to user
-                    ↓ (loop back if tool was called)
-<span class="cmt">── Output ────────────────────────────────────────────────</span>
-Final text response delivered back to the transport</code></div>
-            </div>
-
-            <h3>Three Ways to Use It</h3>
-            <ul class="tech-list">
-              <li><strong>MCP Server</strong>: Run <code>conductor mcp start</code>. Claude Desktop, Cursor, or any MCP client connects and sees all your enabled plugins as native tools. This is the most powerful mode — the AI in your editor gains access to your Spotify, Gmail, GitHub, etc.</li>
-              <li><strong>Telegram Bot</strong>: Run <code>conductor telegram start</code>. Chat with your Conductor from anywhere on your phone. The bot polls the Telegram API — no inbound ports needed.</li>
-              <li><strong>Slack Bot</strong>: Run <code>conductor slack start</code>. Uses Socket Mode — mention the bot or DM it in your workspace. Full plugin access, same as the other modes.</li>
-            </ul>
-
-            <h3>What gets stored where</h3>
-            <table class="plugin-table">
-              <thead><tr><th>Path</th><th>Contents</th></tr></thead>
-              <tbody>
-                <tr><td><code>~/.conductor/config.json</code></td><td>Plugin state, AI provider choice, feature flags. No secrets.</td></tr>
-                <tr><td><code>~/.conductor/keychain/</code></td><td>AES-256-GCM encrypted credential files (<code>.enc</code>). One file per service/key pair. Permissions 0700.</td></tr>
-                <tr><td><code>~/.conductor/notes/</code></td><td>Your local markdown notes (created by the Notes plugin).</td></tr>
-                <tr><td><code>~/.conductor/logs/</code></td><td>Activity logs from the database layer.</td></tr>
-                <tr><td><code>~/.conductor/scheduler.json</code></td><td>Cron/scheduled task state.</td></tr>
-                <tr><td><code>~/.conductor-src/</code></td><td>The cloned source code and compiled <code>dist/</code>. This is what the <code>conductor</code> binary runs.</td></tr>
-              </tbody>
-            </table>
-          </div>
-
-          <!-- AI PROVIDERS -->
-          <div class="card" id="dprov">
-            <h2>⬡ AI Providers</h2>
-            <p>Conductor supports five AI backends. All are implemented in <code>src/ai/</code> and share the same interface via <code>AIManager</code>. Switch at any time — your plugins and tool schemas don't change.</p>
-
-            <table class="plugin-table">
-              <thead><tr><th>Provider</th><th>Models</th><th>Needs</th><th>Notes</th></tr></thead>
-              <tbody>
-                <tr><td><code>claude</code></td><td>claude-sonnet-4-5, opus-4-6, haiku</td><td>ANTHROPIC_API_KEY</td><td>Best tool-calling reliability in testing</td></tr>
-                <tr><td><code>openai</code></td><td>gpt-4o, gpt-4-turbo, gpt-4o-mini</td><td>OPENAI_API_KEY</td><td>Key also used for Memory plugin embeddings</td></tr>
-                <tr><td><code>gemini</code></td><td>gemini-1.5-pro, gemini-1.5-flash</td><td>GOOGLE_API_KEY</td><td>Shares OAuth session with Gmail/Calendar/Drive</td></tr>
-                <tr><td><code>openrouter</code></td><td>any model on openrouter.ai</td><td>OPENROUTER_API_KEY</td><td>Access to 100+ models via one key</td></tr>
-                <tr><td><code>ollama</code></td><td>llama3.2, mistral, qwen2.5, etc.</td><td>Ollama running locally</td><td>Fully offline. <code>ollama serve</code> must be running.</td></tr>
-              </tbody>
-            </table>
-
-            <h3>Configure or Switch</h3>
-            <div class="terminal-block">
-              <div class="terminal-header"><span>bash</span></div>
-              <div class="terminal-body"><code><span class="cmd">$</span> conductor ai setup           <span class="cmt"># interactive setup wizard for any provider</span>
-<span class="cmd">$</span> conductor ai switch claude    <span class="cmt"># hot-swap to Claude</span>
-<span class="cmd">$</span> conductor ai switch ollama    <span class="cmt"># switch to local Ollama</span>
-<span class="cmd">$</span> conductor ai test             <span class="cmt"># send a test message to verify the connection</span>
-<span class="cmd">$</span> conductor ai list             <span class="cmt"># show all configured providers and their status</span></code></div>
-            </div>
-
-            <h3>Ollama (fully offline)</h3>
-            <p>Install Ollama from <a href="https://ollama.com" target="_blank" style="color:var(--blue)">ollama.com</a>, then:</p>
-            <div class="terminal-block">
-              <div class="terminal-header"><span>bash</span></div>
-              <div class="terminal-body"><code><span class="cmd">$</span> ollama pull llama3.2          <span class="cmt"># or mistral, qwen2.5, phi3, etc.</span>
-<span class="cmd">$</span> ollama serve                  <span class="cmt"># must be running before conductor starts</span>
-<span class="cmd">$</span> conductor ai switch ollama
-<span class="cmd">$</span> conductor ai test</code></div>
-            </div>
-            <div class="callout callout-warn">
-              For reliable tool-calling with Ollama, use <code>llama3.1</code>, <code>llama3.2</code>, <code>mistral-nemo</code>, or <code>qwen2.5</code>. Smaller models may not follow tool schemas correctly.
-            </div>
-          </div>
-
-          <!-- PLUGINS -->
-          <div class="card" id="dplug">
-            <h2>⬣ Plugins</h2>
-            <p>Plugins live in <code>src/plugins/builtin/</code>. Each one is a TypeScript class that implements the <code>Plugin</code> interface: a list of tool definitions (name, description, JSON Schema input) and a <code>handle(toolName, args)</code> function. The AI sees every enabled plugin's tools automatically.</p>
-
-            <table class="plugin-table">
-              <thead><tr><th>Plugin</th><th>Tools</th><th>Requires</th><th>Description</th></tr></thead>
-              <tbody>
-                <tr><td>spotify</td><td>21</td><td>Spotify app credentials</td><td>Playback, search, playlists, recommendations, devices</td></tr>
-                <tr><td>gdrive</td><td>15</td><td>Google OAuth</td><td>List, read, upload, share, manage Google Drive files</td></tr>
-                <tr><td>github-actions</td><td>26</td><td>GitHub PAT</td><td>PRs, issues, workflow runs, releases, notifications</td></tr>
-                <tr><td>cron</td><td>14</td><td>—</td><td>Natural language scheduling — "every day at 9am", "in 30 min"</td></tr>
-                <tr><td>n8n</td><td>16</td><td>n8n API key + URL</td><td>Trigger workflows, inspect executions, fire webhooks</td></tr>
-                <tr><td>vercel</td><td>20</td><td>Vercel token</td><td>Deployments, projects, domains, env vars, logs</td></tr>
-                <tr><td>github</td><td>12</td><td>GitHub PAT (optional)</td><td>Repos, search, gists, user info (some tools are unauthenticated)</td></tr>
-                <tr><td>gcal</td><td>7</td><td>Google OAuth</td><td>Read/write Google Calendar events</td></tr>
-                <tr><td>gmail</td><td>8</td><td>Google OAuth</td><td>Read, search, send, label Gmail messages</td></tr>
-                <tr><td>notion</td><td>6</td><td>Notion integration token</td><td>Read/write Notion pages and databases</td></tr>
-                <tr><td>x</td><td>11</td><td>X Bearer Token (+ OAuth for writes)</td><td>Search, timelines, post, like, delete tweets</td></tr>
-                <tr><td>notes</td><td>8</td><td>—</td><td>Local markdown notes — create, read, search, delete</td></tr>
-                <tr><td>memory</td><td>5</td><td>OpenAI key for semantic search (optional)</td><td>Persistent facts the AI remembers across sessions</td></tr>
-                <tr><td>system</td><td>4</td><td>—</td><td>CPU, RAM, disk, running processes via systeminformation</td></tr>
-                <tr><td>weather</td><td>4</td><td>—</td><td>Current conditions, forecast, hourly (uses wttr.in, no API key)</td></tr>
-                <tr><td>crypto</td><td>5</td><td>—</td><td>Live prices, historical data, market cap via CoinGecko</td></tr>
-                <tr><td>translate</td><td>1</td><td>—</td><td>Translate text between languages via MyMemory (free tier)</td></tr>
-                <tr><td>calculator</td><td>3</td><td>—</td><td>Math evaluation, unit conversion, percentage calculations</td></tr>
-                <tr><td>hash</td><td>5</td><td>—</td><td>MD5, SHA-1, SHA-256, SHA-512, bcrypt</td></tr>
-                <tr><td>url-tools</td><td>3</td><td>—</td><td>Fetch URL content, expand short links, check status codes</td></tr>
-                <tr><td>network</td><td>3</td><td>—</td><td>IP lookup, DNS resolve, ping</td></tr>
-                <tr><td>timezone</td><td>2</td><td>—</td><td>Convert times between timezones, list zone info</td></tr>
-                <tr><td>text-tools</td><td>4</td><td>—</td><td>Word count, diff, base64 encode/decode, slug generation</td></tr>
-                <tr><td>colors</td><td>3</td><td>—</td><td>Convert between hex/rgb/hsl, generate palettes</td></tr>
-                <tr><td>fun</td><td>5</td><td>—</td><td>Jokes, quotes, random facts, coin flip, dice</td></tr>
-              </tbody>
-            </table>
-
-            <h3>Manage Plugins</h3>
-            <div class="terminal-block">
-              <div class="terminal-header"><span>bash</span></div>
-              <div class="terminal-body"><code><span class="cmd">$</span> conductor plugins list                      <span class="cmt"># show all plugins + enabled status</span>
-<span class="cmd">$</span> conductor plugins enable spotify             <span class="cmt"># enable a plugin</span>
-<span class="cmd">$</span> conductor plugins disable notion             <span class="cmt"># disable a plugin</span>
-<span class="cmd">$</span> conductor plugins config spotify access_token <span class="str">&lt;TOKEN&gt;</span>  <span class="cmt"># set a credential</span>
-<span class="cmd">$</span> conductor plugins config github_actions token <span class="str">&lt;PAT&gt;</span></code></div>
-            </div>
-          </div>
-
-          <!-- SECURITY -->
-          <div class="card" id="dsec">
-            <h2>🔒 Security</h2>
-            <p>Every credential you enter — API keys, OAuth tokens, bot tokens — is encrypted before being written to disk. The raw value never touches <code>config.json</code>.</p>
-
-            <h3>Keychain Implementation</h3>
-            <p>The keychain is implemented in <code>src/security/keychain.ts</code>. The encryption scheme:</p>
-            <ul class="tech-list">
-              <li><strong>Algorithm</strong>: AES-256-GCM with a random 12-byte IV per write. Authentication tag is stored alongside the ciphertext.</li>
-              <li><strong>Key derivation</strong>: <code>scrypt(machineId, sha256('conductor:keychain:v1'), 32, {N:16384, r:8, p:1})</code></li>
-              <li><strong>Machine ID</strong>: Read from <code>/etc/machine-id</code> (Linux), <code>ioreg IOPlatformUUID</code> (macOS), or the Windows registry <code>MachineGuid</code>. Falls back to a random UUID stored in <code>~/.conductor/keychain/machine_secret</code>.</li>
-              <li><strong>Storage format</strong>: <code>v2:&lt;iv_hex&gt;:&lt;auth_tag_hex&gt;:&lt;ciphertext_hex&gt;</code> — one file per credential, named <code>&lt;service&gt;.&lt;key&gt;.enc</code>.</li>
-              <li><strong>Consequence</strong>: Copying <code>~/.conductor/keychain/</code> to another machine produces unreadable files. Credentials are hardware-bound.</li>
-            </ul>
-
-            <h3>What is and isn't in config.json</h3>
-            <div class="terminal-block">
-              <div class="terminal-header"><span>~/.conductor/config.json — example (no secrets here)</span></div>
-              <div class="terminal-body"><code>{
-  <span class="key">"ai"</span>: { <span class="key">"provider"</span>: <span class="str">"claude"</span> },
-  <span class="key">"plugins"</span>: {
-    <span class="key">"installed"</span>: [<span class="str">"memory"</span>, <span class="str">"notes"</span>, <span class="str">"cron"</span>, <span class="str">"spotify"</span>],
-    <span class="key">"enabled"</span>:   [<span class="str">"memory"</span>, <span class="str">"notes"</span>, <span class="str">"cron"</span>, <span class="str">"spotify"</span>]
-  },
-  <span class="key">"telegram"</span>: { <span class="key">"enabled"</span>: <span class="val">true</span> }
-}</code></div>
-            </div>
-            <p>The actual Telegram bot token lives at <code>~/.conductor/keychain/telegram.bot_token.enc</code> — never in the JSON.</p>
-
-            <div class="callout callout-warn">
-              Never share or back up your <code>~/.conductor/keychain/</code> directory. The files are useless on any other machine but contain your encrypted secrets. Report security issues privately via <a href="https://github.com/thealxlabs/conductor/security/advisories/new" target="_blank" style="color:var(--blue)">GitHub Security Advisories</a> — not public issues.
-            </div>
-          </div>
-
-          <!-- CLI REFERENCE -->
-          <div class="card" id="dcli">
-            <h2>⌨ CLI Reference</h2>
-            <p>After installation, <code>conductor</code> is available globally. Implemented in <code>src/cli/</code> using Commander.js.</p>
-
-            <div class="terminal-block">
-              <div class="terminal-header"><span>all commands</span></div>
-              <div class="terminal-body"><code><span class="cmt"># ── Status & diagnostics ──────────────────────────────────</span>
-<span class="cmd">$</span> conductor status              <span class="cmt"># full health check: AI, plugins, credentials</span>
-
-<span class="cmt"># ── AI provider management ────────────────────────────────</span>
-<span class="cmd">$</span> conductor ai setup            <span class="cmt"># interactive wizard to configure a provider</span>
-<span class="cmd">$</span> conductor ai switch &lt;name&gt;    <span class="cmt"># switch active provider (claude/openai/gemini/etc)</span>
-<span class="cmd">$</span> conductor ai test             <span class="cmt"># send a test prompt to verify the connection</span>
-<span class="cmd">$</span> conductor ai list             <span class="cmt"># show all configured providers</span>
-
-<span class="cmt"># ── Plugin management ─────────────────────────────────────</span>
-<span class="cmd">$</span> conductor plugins list        <span class="cmt"># show all plugins and enabled/disabled state</span>
-<span class="cmd">$</span> conductor plugins enable &lt;p&gt;  <span class="cmt"># enable a plugin</span>
-<span class="cmd">$</span> conductor plugins disable &lt;p&gt; <span class="cmt"># disable a plugin</span>
-<span class="cmd">$</span> conductor plugins config &lt;plugin&gt; &lt;key&gt; &lt;value&gt;  <span class="cmt"># set a credential</span>
-
-<span class="cmt"># ── MCP server ────────────────────────────────────────────</span>
-<span class="cmd">$</span> conductor mcp start           <span class="cmt"># start MCP server (stdout = protocol, stderr = logs)</span>
-<span class="cmd">$</span> conductor mcp setup           <span class="cmt"># auto-write Claude Desktop config</span>
-<span class="cmd">$</span> conductor mcp status          <span class="cmt"># check server health + list registered tools</span>
-
-<span class="cmt"># ── Telegram bot ──────────────────────────────────────────</span>
-<span class="cmd">$</span> conductor telegram start      <span class="cmt"># start long-poll bot (blocks terminal)</span>
-<span class="cmd">$</span> conductor telegram setup      <span class="cmt"># configure bot token interactively</span>
-<span class="cmd">$</span> conductor telegram status     <span class="cmt"># verify token + check bot info</span>
-
-<span class="cmt"># ── Slack bot ─────────────────────────────────────────────</span>
-<span class="cmd">$</span> conductor slack start         <span class="cmt"># start Slack Socket Mode bot (blocks terminal)</span>
-<span class="cmd">$</span> conductor slack setup         <span class="cmt"># configure Bot OAuth + App-Level tokens</span>
-
-<span class="cmt"># ── Google OAuth ──────────────────────────────────────────</span>
-<span class="cmd">$</span> conductor auth google         <span class="cmt"># browser OAuth flow for Gmail/Calendar/Drive/Gemini</span>
-
-<span class="cmt"># ── Maintenance ───────────────────────────────────────────</span>
-<span class="cmd">$</span> conductor update              <span class="cmt"># git pull + rebuild</span></code></div>
-            </div>
-          </div>
-
-          <!-- MCP SERVER -->
-          <div class="card" id="dmcp">
-            <h2>⬡ MCP Server</h2>
-            <p>Conductor implements the <a href="https://modelcontextprotocol.io" target="_blank" style="color:var(--blue)">Model Context Protocol</a> using <code>@modelcontextprotocol/sdk</code>. When you run <code>conductor mcp start</code>, every enabled plugin's tools are registered as MCP tools. Claude Desktop, Cursor, VS Code with MCP support — any compatible client can connect and call them.</p>
-
-            <div class="callout">
-              <strong>Important:</strong> MCP mode uses <strong>stdout as the protocol stream</strong>. Conductor's internal logs are redirected to stderr in this mode. Don't pipe other output to stdout while MCP is running.
-            </div>
-
-            <h3>Auto-configure Claude Desktop</h3>
-            <div class="terminal-block">
-              <div class="terminal-header"><span>bash</span></div>
-              <div class="terminal-body"><code><span class="cmd">$</span> conductor mcp setup   <span class="cmt"># detects your OS, writes to Claude Desktop config, backs up existing</span></code></div>
-            </div>
-            <p>Or add it manually. The config file locations:</p>
-            <table class="plugin-table">
-              <thead><tr><th>OS</th><th>Config path</th></tr></thead>
-              <tbody>
-                <tr><td>macOS</td><td><code>~/Library/Application Support/Claude/claude_desktop_config.json</code></td></tr>
-                <tr><td>Linux</td><td><code>~/.config/Claude/claude_desktop_config.json</code></td></tr>
-                <tr><td>Windows</td><td><code>%APPDATA%\Claude\claude_desktop_config.json</code></td></tr>
-              </tbody>
-            </table>
-            <div class="terminal-block">
-              <div class="terminal-header"><span>claude_desktop_config.json</span></div>
-              <div class="terminal-body"><code>{
-  <span class="key">"mcpServers"</span>: {
-    <span class="key">"conductor"</span>: {
-      <span class="key">"command"</span>: <span class="str">"conductor"</span>,
-      <span class="key">"args"</span>: [<span class="str">"mcp"</span>, <span class="str">"start"</span>]
-    }
-  }
-}</code></div>
-            </div>
-            <p>Restart Claude Desktop after saving. Your enabled Conductor plugins appear as tools in the conversation.</p>
-          </div>
-
-          <!-- TELEGRAM -->
-          <div class="card" id="dtg">
-            <h2>✈ Telegram Bot</h2>
-            <p>Implemented in <code>src/bot/telegram.ts</code> using <code>telegraf</code>. Uses long polling — no inbound port or webhook URL needed. The bot runs on your machine and polls Telegram's servers.</p>
-
-            <h3>Setup</h3>
-            <ol style="color:var(--muted);padding-left:20px;font-size:.88rem;line-height:2.6">
-              <li>Message <a href="https://t.me/BotFather" target="_blank" style="color:var(--blue)">@BotFather</a> → <code>/newbot</code> → follow prompts → copy the token.</li>
-              <li>Run <code>conductor telegram setup</code> and paste the token, or set it directly: <code>conductor plugins config telegram bot_token &lt;TOKEN&gt;</code></li>
-              <li>Run <code>conductor telegram start</code></li>
-              <li>Open your bot in Telegram and send any message.</li>
-            </ol>
-
-            <h3>Bot Commands</h3>
-            <table class="plugin-table">
-              <thead><tr><th>Command</th><th>What it does</th></tr></thead>
-              <tbody>
-                <tr><td>/start</td><td>Initialize the bot session</td></tr>
-                <tr><td>/status</td><td>Show conductor status and enabled plugins</td></tr>
-                <tr><td>/help</td><td>List available commands</td></tr>
-                <tr><td>(any message)</td><td>Forwarded to the AI — full plugin access</td></tr>
-              </tbody>
-            </table>
-
-            <div class="callout callout-warn">
-              There is no user ID whitelist by default — anyone who finds your bot can chat with it. If your bot token leaks, revoke it immediately via @BotFather and issue a new one. Consider keeping the bot username private.
-            </div>
-          </div>
-
-          <!-- SLACK -->
-          <div class="card" id="dslack">
-            <h2>💬 Slack Bot</h2>
-            <p>Implemented in <code>src/bot/slack.ts</code> using <code>@slack/bolt</code> in Socket Mode. No public URL or webhook required — everything runs over a persistent WebSocket connection from your machine to Slack.</p>
-
-            <h3>Setup in Slack</h3>
-            <ol style="color:var(--muted);padding-left:20px;font-size:.88rem;line-height:2.6">
-              <li>Go to <a href="https://api.slack.com/apps" target="_blank" style="color:var(--blue)">api.slack.com/apps</a> → <strong>Create New App</strong> → From Scratch.</li>
-              <li>Under <strong>OAuth &amp; Permissions</strong>, add Bot Token Scopes: <code>app_mentions:read</code>, <code>chat:write</code>, <code>im:history</code>, <code>im:read</code>, <code>im:write</code>. Install to workspace and copy the <code>xoxb-</code> token.</li>
-              <li>Under <strong>Basic Information → App-Level Tokens</strong>, create a token with the <code>connections:write</code> scope. Copy the <code>xapp-</code> token.</li>
-              <li>Enable <strong>Socket Mode</strong> under Settings.</li>
-              <li>Under <strong>Event Subscriptions</strong>, subscribe to <code>message.im</code> and <code>app_mention</code>.</li>
-              <li>Run: <code>conductor slack start</code></li>
-            </ol>
-            <p>Or run the guided setup: <code>conductor slack setup</code></p>
-          </div>
-
-          <!-- GOOGLE AUTH -->
-          <div class="card" id="dgauth">
-            <h2>🔑 Google OAuth</h2>
-            <p>Gmail, Google Calendar, Google Drive, and the Gemini AI provider all share the same Google OAuth session. Authentication is handled in <code>src/utils/google-auth.ts</code> and <code>src/config/oauth.ts</code>.</p>
-
-            <h3>Authenticating</h3>
-            <div class="terminal-block">
-              <div class="terminal-header"><span>bash</span></div>
-              <div class="terminal-body"><code><span class="cmd">$</span> conductor auth google   <span class="cmt"># opens browser → you log in → token saved to keychain</span></code></div>
-            </div>
-            <p>The OAuth flow requests only the scopes needed for your enabled plugins. Tokens are stored encrypted in <code>~/.conductor/keychain/google.access_token.enc</code> and refreshed automatically.</p>
-            <p>Revoke access at any time: <a href="https://myaccount.google.com/permissions" target="_blank" style="color:var(--blue)">myaccount.google.com/permissions</a></p>
-
-            <div class="callout callout-warn">
-              The <code>google-creds.json</code> file in the root of the repo is the OAuth client configuration (Client ID + Secret). <strong>Do not share or commit this file.</strong> It is already in <code>.gitignore</code>.
-            </div>
-          </div>
-
-          <!-- DEVELOPMENT -->
-          <div class="card" id="ddev">
-            <h2>🛠 Development</h2>
-            <p>Conductor is TypeScript compiled with <code>tsc</code>. The source is in <code>src/</code>, compiled output goes to <code>dist/</code>.</p>
-
-            <h3>Dev workflow</h3>
-            <div class="terminal-block">
-              <div class="terminal-header"><span>bash</span></div>
-              <div class="terminal-body"><code><span class="cmd">$</span> npm run dev     <span class="cmt"># tsx watch — restarts on file changes</span>
-<span class="cmd">$</span> npm run build   <span class="cmt"># tsc — compile to dist/</span>
-<span class="cmd">$</span> npm start       <span class="cmt"># node dist/cli/index.js</span>
-<span class="cmd">$</span> npm test        <span class="cmt"># node test-all.mjs --skip-auth (skips OAuth-requiring tests)</span>
-<span class="cmd">$</span> npm run test:full  <span class="cmt"># includes auth-requiring tests</span></code></div>
-            </div>
-
-            <h3>Adding a Plugin</h3>
-            <p>Create a new file in <code>src/plugins/builtin/</code> that implements the <code>Plugin</code> interface, then register it in <code>src/plugins/builtin/index.ts</code>. It will automatically appear in all interfaces (MCP, Telegram, Slack) without any other changes.</p>
-            <div class="terminal-block">
-              <div class="terminal-header"><span>src/plugins/builtin/myplugin.ts — minimal structure</span></div>
-              <div class="terminal-body"><code><span class="key">import</span> { Plugin, PluginTool } from <span class="str">'../manager.js'</span>;
-
-<span class="key">export class</span> MyPlugin <span class="key">implements</span> Plugin {
-  name = <span class="str">'myplugin'</span>;
-  description = <span class="str">'Does something useful'</span>;
-
-  getTools(): PluginTool[] {
-    <span class="key">return</span> [{
-      name: <span class="str">'myplugin_greet'</span>,
-      description: <span class="str">'Greets a person'</span>,
-      inputSchema: {
-        type: <span class="str">'object'</span>,
-        properties: {
-          name: { type: <span class="str">'string'</span>, description: <span class="str">'Name to greet'</span> }
-        },
-        required: [<span class="str">'name'</span>]
-      }
-    }];
-  }
-
-  <span class="key">async</span> handle(toolName: string, args: Record&lt;string, <span class="key">any</span>&gt;) {
-    <span class="key">if</span> (toolName === <span class="str">'myplugin_greet'</span>) {
-      <span class="key">return</span> { message: <span class="str">`Hello, ${args.name}!`</span> };
-    }
-    <span class="key">throw new</span> Error(<span class="str">`Unknown tool: ${toolName}`</span>);
-  }
-}</code></div>
-            </div>
-            <p>Then add <code>new MyPlugin()</code> to the array in <code>src/plugins/builtin/index.ts</code>. Run <code>npm run build</code> and it's live.</p>
-          </div>
-
-          <!-- TROUBLESHOOTING -->
-          <div class="card" id="dts">
-            <h2>🔧 Troubleshooting</h2>
-
-            <h3 style="color:var(--orange)">conductor: command not found after install</h3>
-            <p>The installer tries <code>npm link</code>, then global install, then falls back to <code>~/.local/bin/conductor</code>. If nothing worked, check the install output. To add <code>~/.local/bin</code> to PATH manually:</p>
-            <div class="terminal-block">
-              <div class="terminal-header"><span>~/.zshrc or ~/.bashrc</span></div>
-              <div class="terminal-body"><code><span class="key">export</span> PATH=<span class="str">"$HOME/.local/bin:$PATH"</span></code></div>
-            </div>
-            <p>Then <code>source ~/.zshrc</code> or open a new terminal.</p>
-
-            <h3 style="color:var(--orange)">Build failed during install</h3>
-            <p>Run the build manually to see the full error:</p>
-            <div class="terminal-block">
-              <div class="terminal-header"><span>bash</span></div>
-              <div class="terminal-body"><code><span class="cmd">$</span> cd ~/.conductor-src
-<span class="cmd">$</span> npm install
-<span class="cmd">$</span> npm run build</code></div>
-            </div>
-
-            <h3 style="color:var(--orange)">AI test fails / wrong API key</h3>
-            <div class="terminal-block">
-              <div class="terminal-header"><span>bash</span></div>
-              <div class="terminal-body"><code><span class="cmd">$</span> conductor ai test           <span class="cmt"># shows exactly which provider + error</span>
-<span class="cmd">$</span> conductor ai setup          <span class="cmt"># re-enter credentials</span></code></div>
-            </div>
-
-            <h3 style="color:var(--orange)">Google OAuth not working</h3>
-            <div class="terminal-block">
-              <div class="terminal-header"><span>bash</span></div>
-              <div class="terminal-body"><code><span class="cmd">$</span> conductor auth google       <span class="cmt"># re-run the OAuth flow</span></code></div>
-            </div>
-
-            <h3 style="color:var(--orange)">MCP not appearing in Claude Desktop</h3>
-            <p>Run <code>conductor mcp setup</code> to rewrite the config. Then fully quit and relaunch Claude Desktop (not just close the window — quit from the menu bar on macOS). Check that <code>conductor</code> is in your PATH — Claude Desktop has its own environment and may not inherit your shell PATH.</p>
-            <div class="terminal-block">
-              <div class="terminal-header"><span>bash — test if Claude Desktop can find conductor</span></div>
-              <div class="terminal-body"><code><span class="cmd">$</span> which conductor             <span class="cmt"># note the full path</span>
-<span class="cmt"># then edit claude_desktop_config.json to use the full path:</span>
-<span class="cmt"># "command": "/Users/you/.local/bin/conductor"</span></code></div>
-            </div>
-
-            <h3 style="color:var(--orange)">Telegram bot not responding</h3>
-            <p>Check <code>conductor telegram status</code>. The most common issue is an expired or invalid token. Create a new one with @BotFather using <code>/mybots → your bot → API Token → Regenerate</code>, then update: <code>conductor plugins config telegram bot_token &lt;NEW_TOKEN&gt;</code></p>
-
-            <h3 style="color:var(--orange)">Reset everything</h3>
-            <div class="terminal-block">
-              <div class="terminal-header"><span>bash</span></div>
-              <div class="terminal-body"><code><span class="cmt"># Wipe config only (keeps keychain)</span>
-<span class="cmd">$</span> rm ~/.conductor/config.json
-
-<span class="cmt"># Wipe everything including encrypted credentials</span>
-<span class="cmd">$</span> rm -rf ~/.conductor
-
-<span class="cmt"># Reinstall from scratch</span>
-<span class="cmd">$</span> curl -fsSL https://raw.githubusercontent.com/thealxlabs/conductor/main/install.sh | bash</code></div>
-            </div>
-          </div>
-
-          <!-- FAQ -->
-          <div class="card" id="dfaq">
-            <h2>? FAQ</h2>
-
-            <h3 style="color:var(--orange)">Is anything sent to AlxLabs servers?</h3>
-            <p>No. Conductor has zero telemetry. Your API calls go directly from your machine to whichever service you're calling (Anthropic, Spotify, Google, etc). AlxLabs is not in the request chain.</p>
-
-            <h3 style="color:var(--orange)">Can I run it completely offline?</h3>
-            <p>Yes, with Ollama. Set <code>conductor ai switch ollama</code>, make sure <code>ollama serve</code> is running, and use only local plugins (notes, calculator, hash, text-tools, etc). Plugins that call external APIs (Spotify, Gmail, GitHub, etc.) still need internet for those APIs — but Conductor itself doesn't.</p>
-
-            <h3 style="color:var(--orange)">What happens when I update?</h3>
-            <div class="terminal-block">
-              <div class="terminal-header"><span>bash</span></div>
-              <div class="terminal-body"><code><span class="cmd">$</span> conductor update   <span class="cmt"># git pull in ~/.conductor-src + npm run build</span></code></div>
-            </div>
-            <p>Your config and keychain are untouched. If there are breaking config changes, the release notes will say so.</p>
-
-            <h3 style="color:var(--orange)">Can multiple people use one instance?</h3>
-            <p>Conductor is designed as a single-user local agent. The Telegram and Slack bots don't have multi-user access control built in — anyone who can reach the bot can interact with it.</p>
-
-            <h3 style="color:var(--orange)">The Spotify token expired</h3>
-            <p>Spotify access tokens expire after 1 hour. You need to get a new one from your Spotify Developer Dashboard and update it:</p>
-            <div class="terminal-block">
-              <div class="terminal-header"><span>bash</span></div>
-              <div class="terminal-body"><code><span class="cmd">$</span> conductor plugins config spotify access_token <span class="str">&lt;NEW_TOKEN&gt;</span></code></div>
-            </div>
-
-            <h3 style="color:var(--orange)">How do I report a bug?</h3>
-            <p>Open an issue on <a href="https://github.com/thealxlabs/conductor/issues" target="_blank" style="color:var(--blue)">GitHub</a>. Run <code>conductor status</code> first and include the output — it shows plugin health, AI config, and version info in one shot.</p>
-          </div>
-
-        </div><!-- /docs-content -->
-      </div><!-- /docs-layout -->
-    </div><!-- /docs -->
-
-
-    <!-- ██████████████ CHANGELOG PAGE ██████████████ -->
-    <div id="page-changelog" class="page fade-in">
-      <div class="page-header">
-        <h1 class="page-title">CHANGELOG.md</h1>
-        <p class="page-sub">Live from GitHub releases — updates automatically when new versions ship.</p>
-      </div>
-
-      <div id="changelog-live" style="display:flex;flex-direction:column;gap:20px;">
-        <!-- Loading state -->
-        <div id="changelog-loading" class="card" style="text-align:center;padding:60px 32px;">
-          <div style="font-family:var(--mono);font-size:.8rem;color:var(--muted);margin-bottom:12px;">
-            <span class="dot-live" style="margin-right:8px;"></span>fetching releases from github...
-          </div>
-          <div style="font-size:.75rem;color:var(--dim);font-family:var(--mono)">github.com/thealxlabs/conductor/releases</div>
-        </div>
+  </section>
+
+  <section id="page-docs" class="page">
+    <span class="section-label">// Documentation</span>
+    <div class="card">
+      <h2>Technical Overview</h2>
+      <p>Conductor unifies AI providers (OpenAI, Anthropic, Ollama) with a local tool-calling loop. It functions by:</p>
+      <h3 style="margin-top:20px;">1. Tool Discovery</h3>
+      <p class="legal-text">Each plugin exports a JSON Schema. Upon startup, Conductor registers these capabilities into the LLM system prompt.</p>
+      <h3>2. The Agentic Loop</h3>
+      <p class="legal-text">The agent analyzes user intent, selects a tool, executes it locally, and feeds the output back into the model until the goal is met.</p>
+      <h3>3. Environment Management</h3>
+      <p class="legal-text">All tool execution happens within a defined permission scope. Shell commands require explicit user confirmation by default.</p>
+    </div>
+  </section>
+
+  <section id="page-changelog" class="page">
+    <span class="section-label">// History</span>
+    <div class="card">
+      <h2>Version History</h2>
+      <h3>v0.9.0 (2026-02-01)</h3>
+      <p class="legal-text">• Added support for DeepSeek-V3 via OpenRouter.<br>• Implementation of AES-256-GCM for credential storage.<br>• New Plugin: Spotify Playback Control.</p>
+      <h3>v0.8.5 (2026-01-15)</h3>
+      <p class="legal-text">• Refactored ProviderAdapter for lower latency.<br>• Fixed memory leak in long-running agent loops.</p>
+    </div>
+  </section>
+
+  <section id="page-license" class="page">
+    <span class="section-label">// Open Source</span>
+    <div class="card">
+      <h2>Apache License 2.0</h2>
+      <p class="legal-text">Conductor is licensed under the Apache License, Version 2.0. You may obtain a copy of the License at <a href="http://www.apache.org/licenses/LICENSE-2.0" style="color:var(--blue)">apache.org/licenses/LICENSE-2.0</a>.</p>
+      <p class="legal-text" style="margin-top:10px;">Essentially: You can use, modify, and distribute this software for any purpose, but you must include the original copyright notice and disclaimer.</p>
+    </div>
+  </section>
+
+  <section id="page-tos" class="page">
+    <span class="section-label">// Legal</span>
+    <div class="card">
+      <h2>Terms of Service</h2>
+      <div class="legal-text">
+        <p>Last Updated: February 2026</p>
+        <h3>1. Acceptance of Terms</h3>
+        <p>By installing Conductor, you acknowledge that this is an autonomous agent framework. You are responsible for all actions performed by the software on your local machine.</p>
+        <h3>2. Safe Use</h3>
+        <p>You agree not to use Conductor for illegal activities, including unauthorized network scanning, automated credential stuffing, or creation of malware.</p>
+        <h3>3. Limitation of Liability</h3>
+        <p>ALXLABS provides this software "as is." We are not responsible for data loss, hardware damage, or API costs incurred by autonomous agent loops.</p>
       </div>
     </div>
+  </section>
 
-
-    <!-- ██████████████ LICENSE PAGE ██████████████ -->
-    <div id="page-license" class="page fade-in">
-      <div class="page-header">
-        <h1 class="page-title">LICENSE.md</h1>
-        <p class="page-sub">Legal permissions and limitations for Conductor.</p>
-      </div>
-      <div class="card">
-        <h3 style="color:var(--blue);margin-top:0">Apache License 2.0</h3>
-        <p style="font-family:var(--mono);font-size:.83rem;color:var(--text)">Copyright © 2025 Alexander Wondwossen / TheAlxLabs</p>
-
-        <div class="callout callout-success" style="margin-top:18px;margin-bottom:20px">
-          <strong>Plain English:</strong> Use it, modify it, ship it, sell it, include it in commercial products — just keep the copyright notice and the license file. Contributors also grant you patent rights. No warranty provided.
-        </div>
-
-        <p>Licensed under the Apache License, Version 2.0 (the "License"); you may not use this software except in compliance with the License. You may obtain a copy of the License at:</p>
-        <p><a href="https://www.apache.org/licenses/LICENSE-2.0" target="_blank" style="color:var(--blue)">https://www.apache.org/licenses/LICENSE-2.0</a></p>
-        <p>Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.</p>
-
-        <h3 style="color:var(--blue)">What Apache 2.0 Allows</h3>
-        <ul class="tech-list" style="margin-top:8px">
-          <li><strong>Commercial use</strong> — use Conductor in commercial products and services</li>
-          <li><strong>Modification</strong> — fork it, change it, build on top of it</li>
-          <li><strong>Distribution</strong> — distribute original or modified copies</li>
-          <li><strong>Patent grant</strong> — contributors grant you a royalty-free patent license for their contributions</li>
-          <li><strong>Private use</strong> — use it internally without publishing changes</li>
-        </ul>
-
-        <h3 style="color:var(--orange)">What You Must Do</h3>
-        <ul class="tech-list" style="margin-top:8px">
-          <li>Include a copy of the Apache 2.0 license in any distribution</li>
-          <li>Retain all copyright, patent, trademark, and attribution notices</li>
-          <li>State significant changes made to the source files</li>
-          <li>Include a <code>NOTICE</code> file if the original project has one</li>
-        </ul>
-
-        <h3 style="color:var(--blue)">What Apache 2.0 Does NOT Require</h3>
-        <ul class="tech-list" style="margin-top:8px">
-          <li>You do <strong>not</strong> have to open-source your modifications (unlike GPL)</li>
-          <li>You do <strong>not</strong> have to use the same license for your own work built on top</li>
-        </ul>
+  <section id="page-privacy" class="page">
+    <span class="section-label">// Compliance</span>
+    <div class="card">
+      <h2>Privacy Policy</h2>
+      <div class="legal-text">
+        <p>Last Updated: February 2026</p>
+        <h3>1. Local-Only Processing</h3>
+        <p>Conductor is built on a "Zero-Telemetry" architecture. We do not track your usage, IP address, or prompts. No data is sent to ALXLABS.</p>
+        <h3>2. Third-Party API Interaction</h3>
+        <p>Conductor connects directly to the API endpoints you configure (e.g., api.openai.com). Your data is subject to the privacy policies of those specific providers.</p>
+        <h3>3. Credential Security</h3>
+        <p>API keys are stored in <code>~/.conductor/config.enc</code>. They are encrypted using a master password that is never stored in plaintext and never transmitted.</p>
       </div>
     </div>
+  </section>
+</main>
 
-
-    <!-- ██████████████ TOS PAGE ██████████████ -->
-    <div id="page-tos" class="page fade-in">
-      <div class="page-header">
-        <h1 class="page-title">TERMS.md</h1>
-        <p class="page-sub">Rules of engagement for operating Conductor.</p>
-      </div>
-      <div class="card">
-        <h3 style="color:var(--blue);margin-top:0">1. Acceptance of Terms</h3>
-        <p>By downloading, cloning, or initializing Conductor onto your local hardware, you agree to these terms. If you do not agree, do not use the software.</p>
-        <h3 style="color:var(--blue)">2. Description of Service</h3>
-        <p>Conductor is an open-source autonomous agent framework that interfaces locally with your operating system, registered third-party APIs, and AI providers of your choosing. The software is provided free of charge under the Apache License 2.0.</p>
-        <h3 style="color:var(--blue)">3. User Responsibilities</h3>
-        <p>You are responsible for all actions taken by your Conductor instance. You must operate the software in accordance with applicable local laws and regulations. You must not use Conductor to conduct unauthorized access to systems, facilitate malicious activities, or violate any third-party terms of service.</p>
-        <h3 style="color:var(--blue)">4. Third-Party Services</h3>
-        <p>Conductor integrates with third-party APIs (Spotify, Google, OpenAI, Anthropic, Telegram, etc.). Your use of those services is governed by their respective terms of service. AlxLabs is not responsible for changes to, or interruptions of, third-party services.</p>
-        <h3 style="color:var(--blue)">5. Intellectual Property</h3>
-        <p>Conductor source code is licensed under the Apache License 2.0. User-generated content — notes, configurations, workflows — remains entirely your own property. AlxLabs claims no rights over data you create or store using the software.</p>
-        <h3 style="color:var(--blue)">6. Disclaimer of Warranties</h3>
-        <p>This software is provided "as-is" without any express or implied warranties. Use is at your own risk.</p>
-        <h3 style="color:var(--blue)">7. Limitation of Liability</h3>
-        <p>AlxLabs and its contributors shall not be liable for any direct, indirect, incidental, special, or consequential damages arising from your use of — or inability to use — this software.</p>
-        <h3 style="color:var(--blue)">8. Changes to Terms</h3>
-        <p>These terms may be updated at any time. Continued use constitutes acceptance. Changes are communicated via the GitHub repository.</p>
-        <h3 style="color:var(--blue)">9. Contact</h3>
-        <p>Questions? Open an issue at <a href="https://github.com/thealxlabs/conductor" target="_blank" style="color:var(--blue)">github.com/thealxlabs/conductor</a>.</p>
-      </div>
-    </div>
-
-
-    <!-- ██████████████ PRIVACY PAGE ██████████████ -->
-    <div id="page-privacy" class="page fade-in">
-      <div class="page-header">
-        <h1 class="page-title">PRIVACY.md</h1>
-        <p class="page-sub">Data processing, storage, and telemetry statement.</p>
-      </div>
-      <div class="card">
-        <h3 style="color:var(--orange);margin-top:0">Local-First Protocol</h3>
-        <p>Conductor runs entirely on your machine. There are no AlxLabs servers involved in normal operation. Every credential, note, configuration, and log file lives exclusively on your local filesystem.</p>
-        <h3 style="color:var(--orange)">Zero Telemetry Guarantee</h3>
-        <p>We do not track usage, collect crash reports, log interactions, or transmit any analytics. Your conversations and tool outputs are accessible only to the agent running on your machine.</p>
-        <h3 style="color:var(--orange)">Google OAuth &amp; Third-Party Services</h3>
-        <p>When you optionally connect Google services (Gmail, Calendar) via OAuth 2.0, Conductor requests only the minimum scopes required for the specific tools you enable. OAuth tokens are stored locally in your AES-256-GCM encrypted vault and are never transmitted to AlxLabs. Revoke access at any time via <a href="https://myaccount.google.com/permissions" target="_blank" style="color:var(--blue)">myaccount.google.com/permissions</a>.</p>
-        <h3 style="color:var(--orange)">What Conductor Does NOT Collect</h3>
-        <ul class="tech-list" style="margin-top:8px">
-          <li>Personal identifiable information of any kind</li>
-          <li>Conversation history or agent outputs</li>
-          <li>API keys or authentication tokens</li>
-          <li>Usage analytics, session duration, or feature telemetry</li>
-          <li>IP addresses, device identifiers, or location data</li>
-        </ul>
-        <h3 style="color:var(--orange)">Third-Party API Interactions</h3>
-        <p>When plugins are active, Conductor communicates directly with those services on your behalf using credentials you supply. Those interactions are governed by the respective service's privacy policy — AlxLabs has no visibility into them.</p>
-        <h3 style="color:var(--orange)">Data Storage</h3>
-        <p>All persistent data is written to <code>~/.conductor/</code>. Delete this directory at any time to fully remove all Conductor data from your system.</p>
-        <h3 style="color:var(--orange)">Contact</h3>
-        <p>Privacy questions? Open an issue at <a href="https://github.com/thealxlabs/conductor" target="_blank" style="color:var(--blue)">github.com/thealxlabs/conductor</a>.</p>
-      </div>
-    </div>
-
-  </main>
-
-  <footer>
-    <div class="footer-inner">
-      <div class="footer-credit">
-        © <span id="yr"></span> Conductor &mdash; <a href="https://github.com/TheAlxLabs" target="_blank">TheAlxLabs</a>
-      </div>
-      <div class="footer-links">
-        <a onclick="showPage('changelog')">Changelog</a>
-        <a onclick="showPage('license')">License</a>
-        <a onclick="showPage('tos')">Terms</a>
-        <a onclick="showPage('privacy')">Privacy</a>
-        <a href="https://github.com/thealxlabs/conductor" target="_blank">GitHub ↗</a>
-      </div>
-    </div>
-  </footer>
-
-</div>
+<footer>
+  &copy; 2026 ALXLABS. NO TELEMETRY. NO TRACKING. JUST TOOLS.
+</footer>
 
 <script>
-  document.getElementById('yr').textContent = new Date().getFullYear();
-
-  const PAGES = ['home','docs','changelog','license','tos','privacy'];
-
-  function showPage(name) {
-    PAGES.forEach(p => {
-      const el = document.getElementById('page-' + p);
-      const nav = document.getElementById('nav-' + p);
-      if (el) el.classList.remove('active');
-      if (nav) nav.classList.remove('active');
-    });
-    const page = document.getElementById('page-' + name);
-    if (page) {
-      page.classList.add('active');
-      page.classList.remove('fade-in');
-      void page.offsetWidth;
-      page.classList.add('fade-in');
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+    
+    const targetPage = document.getElementById('page-' + id);
+    const targetLink = document.getElementById('link-' + id);
+    
+    if(targetPage && targetLink) {
+      targetPage.classList.add('active');
+      targetLink.classList.add('active');
+      window.scrollTo(0,0);
     }
-    const navEl = document.getElementById('nav-' + name);
-    if (navEl) navEl.classList.add('active');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    window.location.hash = name === 'home' ? '' : name;
-
-    if (name === 'changelog') fetchChangelog();
   }
 
-  function ds(id, el) {
-    const t = document.getElementById(id);
-    if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    document.querySelectorAll('.docs-sidebar a').forEach(a => a.classList.remove('dsa'));
-    if (el) el.classList.add('dsa');
-  }
-
-  function copyText(btn, text) {
+  function copy(text, btn) {
     navigator.clipboard.writeText(text).then(() => {
-      const orig = btn.textContent;
-      btn.textContent = 'copied!';
-      btn.style.color = 'var(--green)';
-      setTimeout(() => { btn.textContent = orig; btn.style.color = ''; }, 1800);
+      const originalText = btn.innerText;
+      btn.innerText = 'COPIED';
+      btn.style.background = 'var(--green)';
+      btn.style.color = '#000';
+      setTimeout(() => {
+        btn.innerText = originalText;
+        btn.style.background = 'var(--panel2)';
+        btn.style.color = '#fff';
+      }, 2000);
     });
   }
-
-  // ── GitHub Releases → Changelog ──────────────────────────────
-  let changelogFetched = false;
-
-  async function fetchChangelog() {
-    if (changelogFetched) return;
-    changelogFetched = true;
-
-    const container = document.getElementById('changelog-live');
-    const loading   = document.getElementById('changelog-loading');
-
-    try {
-      const res = await fetch('https://api.github.com/repos/thealxlabs/conductor/releases', {
-        headers: { 'Accept': 'application/vnd.github+json' }
-      });
-
-      if (!res.ok) throw new Error('GitHub API error ' + res.status);
-      const releases = await res.json();
-
-      if (!releases.length) throw new Error('no releases');
-
-      // Remove loading state
-      loading.remove();
-
-      releases.forEach((rel, i) => {
-        const date = new Date(rel.published_at).toLocaleDateString('en-US', {
-          year: 'numeric', month: 'long', day: 'numeric'
-        });
-
-        // Parse markdown body into styled list items
-        const bodyHtml = parseReleaseBody(rel.body || '');
-
-        const isLatest = i === 0;
-        const card = document.createElement('div');
-        card.className = 'card changelog-entry';
-        card.style.cssText = 'border-bottom:none;padding:32px;';
-        card.innerHTML = `
-          <div style="display:flex;align-items:center;gap:14px;margin-bottom:6px;flex-wrap:wrap;">
-            <span class="changelog-version" style="${isLatest ? 'background:var(--orange-lo);border-color:rgba(255,107,43,.35);color:var(--orange);' : ''}">${escHtml(rel.tag_name)}</span>
-            ${isLatest ? '<span style="font-family:var(--mono);font-size:.62rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--orange);background:var(--orange-lo);border:1px solid rgba(255,107,43,.25);padding:3px 10px;border-radius:3px;">latest</span>' : ''}
-            ${rel.prerelease ? '<span style="font-family:var(--mono);font-size:.62rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);background:rgba(255,255,255,.05);border:1px solid var(--border);padding:3px 10px;border-radius:3px;">pre-release</span>' : ''}
-          </div>
-          <div class="changelog-date" style="margin-bottom:${bodyHtml ? '18px' : '0'}">${date}</div>
-          ${bodyHtml}
-          <div style="margin-top:${bodyHtml ? '16px' : '4px'};">
-            <a href="${escHtml(rel.html_url)}" target="_blank" style="font-family:var(--mono);font-size:.72rem;color:var(--blue);text-decoration:none;transition:color .15s;" onmouseover="this.style.color='var(--orange)'" onmouseout="this.style.color='var(--blue)'">View on GitHub ↗</a>
-          </div>
-        `;
-        container.appendChild(card);
-      });
-
-    } catch (err) {
-      // Fallback: show static changelog if GitHub unavailable
-      loading.innerHTML = `
-        <div style="font-family:var(--mono);font-size:.78rem;color:var(--muted);margin-bottom:20px;">
-          <span style="color:var(--orange);">!</span> Couldn't reach GitHub API — showing cached changelog.
-        </div>
-        ${staticChangelog()}
-      `;
-      loading.style.textAlign = 'left';
-      loading.style.padding = '32px';
-    }
-  }
-
-  function parseReleaseBody(md) {
-    if (!md.trim()) return '';
-    const lines = md.split('\n');
-    let html = '<ul class="changelog-list" style="margin-top:4px;">';
-    let hasItems = false;
-
-    lines.forEach(line => {
-      const trimmed = line.trim();
-      if (!trimmed) return;
-      // Skip heading lines
-      if (trimmed.startsWith('#')) return;
-
-      let cls = '';
-      let text = trimmed.replace(/^[-*+]\s*/, '');
-
-      if (/^[-*+]\s*\*\*(feat|add|new)/i.test(trimmed) || /^[-*+]\s*(feat|add|new)/i.test(trimmed)) cls = 'feat';
-      else if (/^[-*+]\s*\*\*(fix|bug|patch)/i.test(trimmed) || /^[-*+]\s*(fix|bug|patch)/i.test(trimmed)) cls = 'fix';
-
-      if (trimmed.startsWith('-') || trimmed.startsWith('*') || trimmed.startsWith('+')) {
-        // inline code in backticks
-        text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
-        // bold
-        text = text.replace(/\*\*([^*]+)\*\*/g, '<strong style="color:var(--text)">$1</strong>');
-        html += `<li class="${cls}">${text}</li>`;
-        hasItems = true;
-      }
-    });
-
-    html += '</ul>';
-    return hasItems ? html : `<p style="color:var(--muted);font-size:.875rem;">${escHtml(md.trim()).replace(/\n/g,'<br>')}</p>`;
-  }
-
-  function escHtml(str) {
-    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-
-  function staticChangelog() {
-    return `
-      <div class="changelog-entry" style="border-bottom:1px solid var(--border);padding-bottom:24px;margin-bottom:24px;">
-        <div class="changelog-version" style="color:var(--orange);background:var(--orange-lo);border-color:rgba(255,107,43,.35);">v0.9.0</div>
-        <div class="changelog-date">Latest · 2025</div>
-        <ul class="changelog-list" style="margin-top:12px;">
-          <li class="feat">MCP server with full plugin tool exposure</li>
-          <li class="feat">Browser plugin (headless Chromium)</li>
-          <li class="feat">Gmail &amp; Calendar beta plugins via OAuth 2.0</li>
-          <li class="feat">Hot-swap AI providers with <code>conductor ai switch</code></li>
-          <li class="fix">Fixed Spotify token refresh race condition</li>
-          <li class="fix">Fixed shell plugin path traversal edge cases</li>
-          <li>Added <code>--json</code> flag to all CLI commands</li>
-        </ul>
-      </div>
-      <div class="changelog-entry" style="border-bottom:1px solid var(--border);padding-bottom:24px;margin-bottom:24px;">
-        <div class="changelog-version">v0.8.0</div>
-        <div class="changelog-date">2024</div>
-        <ul class="changelog-list" style="margin-top:12px;">
-          <li class="feat">Telegram bot plugin with user ID whitelisting</li>
-          <li class="feat">AES-256-GCM keychain — all secrets encrypted at rest</li>
-          <li class="feat">Google Gemini 1.5 provider</li>
-          <li class="fix">Fixed notes full-text index rebuild on large vaults</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-version">v0.7.0</div>
-        <div class="changelog-date">2024</div>
-        <ul class="changelog-list" style="margin-top:12px;">
-          <li class="feat">Ollama local model support — full offline mode</li>
-          <li class="feat">Notes, Files plugins</li>
-          <li class="feat">OpenAI GPT-4o provider</li>
-          <li>ProviderAdapter abstraction layer</li>
-        </ul>
-      </div>
-    `;
-  }
-
-  // ── Hash routing ─────────────────────────────────────────────
-  const hash = window.location.hash.replace('#', '');
-  if (PAGES.includes(hash)) showPage(hash);
-
-  // ── Docs sidebar scroll tracking ─────────────────────────────
-  const docCards = document.querySelectorAll('.docs-content .card[id]');
-  const sidebarLinks = document.querySelectorAll('.docs-sidebar a');
-  window.addEventListener('scroll', () => {
-    if (!document.getElementById('page-docs').classList.contains('active')) return;
-    let current = '';
-    docCards.forEach(card => {
-      if (card.getBoundingClientRect().top < 140) current = card.id;
-    });
-    sidebarLinks.forEach(a => {
-      const onclick = a.getAttribute('onclick');
-      if (onclick && onclick.includes(`'${current}'`)) {
-        a.classList.add('dsa');
-      } else {
-        a.classList.remove('dsa');
-      }
-    });
-  });
 </script>
+
 </body>
 </html>
