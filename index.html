@@ -1412,12 +1412,51 @@ Final text response delivered back to the transport</code></div>
       </div>
 
       <div id="changelog-live" style="display:flex;flex-direction:column;gap:20px;">
-        <!-- Loading state -->
-        <div id="changelog-loading" class="card" style="text-align:center;padding:60px 32px;">
-          <div style="font-family:var(--mono);font-size:.8rem;color:var(--muted);margin-bottom:12px;">
-            <span class="dot-live" style="margin-right:8px;"></span>fetching releases from github...
+        <!-- Static entries shown immediately; replaced by live data if API succeeds -->
+        <div id="changelog-static">
+          <div class="card changelog-entry" style="border-bottom:none;padding:32px;">
+            <div style="display:flex;align-items:center;gap:14px;margin-bottom:6px;flex-wrap:wrap;">
+              <span class="changelog-version" style="background:var(--orange-lo);border-color:rgba(255,107,43,.35);color:var(--orange);">v0.9.0</span>
+              <span style="font-family:var(--mono);font-size:.62rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--orange);background:var(--orange-lo);border:1px solid rgba(255,107,43,.25);padding:3px 10px;border-radius:3px;">latest</span>
+            </div>
+            <div class="changelog-date" style="margin-bottom:18px;">2026</div>
+            <ul class="changelog-list" style="margin-top:4px;">
+              <li class="feat">MCP server with full plugin tool exposure</li>
+              <li class="feat">Browser plugin (headless Chromium)</li>
+              <li class="feat">Gmail &amp; Calendar beta plugins via OAuth 2.0</li>
+              <li class="feat">Hot-swap AI providers with <code>conductor ai switch</code></li>
+              <li class="fix">Fixed Spotify token refresh race condition</li>
+              <li class="fix">Fixed shell plugin path traversal edge cases</li>
+              <li>Added <code>--json</code> flag to all CLI commands</li>
+            </ul>
+            <div style="margin-top:16px;"><a href="https://github.com/thealxlabs/conductor/releases" target="_blank" style="font-family:var(--mono);font-size:.72rem;color:var(--blue);">View on GitHub ↗</a></div>
           </div>
-          <div style="font-size:.75rem;color:var(--dim);font-family:var(--mono)">github.com/thealxlabs/conductor/releases</div>
+          <div class="card changelog-entry" style="border-bottom:none;padding:32px;">
+            <div style="display:flex;align-items:center;gap:14px;margin-bottom:6px;">
+              <span class="changelog-version">v0.8.0</span>
+            </div>
+            <div class="changelog-date" style="margin-bottom:18px;">2026</div>
+            <ul class="changelog-list" style="margin-top:4px;">
+              <li class="feat">Telegram bot plugin with user ID whitelisting</li>
+              <li class="feat">AES-256-GCM keychain — all secrets encrypted at rest</li>
+              <li class="feat">Google Gemini 1.5 provider</li>
+              <li class="fix">Fixed notes full-text index rebuild on large vaults</li>
+            </ul>
+            <div style="margin-top:16px;"><a href="https://github.com/thealxlabs/conductor/releases" target="_blank" style="font-family:var(--mono);font-size:.72rem;color:var(--blue);">View on GitHub ↗</a></div>
+          </div>
+          <div class="card changelog-entry" style="border-bottom:none;padding:32px;">
+            <div style="display:flex;align-items:center;gap:14px;margin-bottom:6px;">
+              <span class="changelog-version">v0.7.0</span>
+            </div>
+            <div class="changelog-date" style="margin-bottom:18px;">2026</div>
+            <ul class="changelog-list" style="margin-top:4px;">
+              <li class="feat">Ollama local model support — full offline mode</li>
+              <li class="feat">Notes, Files plugins</li>
+              <li class="feat">OpenAI GPT-4o provider</li>
+              <li>ProviderAdapter abstraction layer</li>
+            </ul>
+            <div style="margin-top:16px;"><a href="https://github.com/thealxlabs/conductor/releases" target="_blank" style="font-family:var(--mono);font-size:.72rem;color:var(--blue);">View on GitHub ↗</a></div>
+          </div>
         </div>
       </div>
     </div>
@@ -1757,36 +1796,33 @@ Final text response delivered back to the transport</code></div>
   }
 
   // ── GitHub Releases → Changelog ──────────────────────────────
+  // Static content is already rendered in the HTML.
+  // This silently tries the GitHub API and replaces static entries
+  // with live data if successful — no error banner ever shown.
   let changelogFetched = false;
 
   async function fetchChangelog() {
     if (changelogFetched) return;
     changelogFetched = true;
 
-    const container = document.getElementById('changelog-live');
-    const loading   = document.getElementById('changelog-loading');
-
     try {
       const res = await fetch('https://api.github.com/repos/thealxlabs/conductor/releases', {
         headers: { 'Accept': 'application/vnd.github+json' }
       });
-
-      if (!res.ok) throw new Error('GitHub API error ' + res.status);
+      if (!res.ok) return; // silently keep static
       const releases = await res.json();
+      if (!releases.length) return; // silently keep static
 
-      if (!releases.length) throw new Error('no releases');
+      const container = document.getElementById('changelog-live');
+      const staticEl  = document.getElementById('changelog-static');
 
-      // Remove loading state
-      loading.remove();
-
+      // Build live cards
+      const frag = document.createDocumentFragment();
       releases.forEach((rel, i) => {
         const date = new Date(rel.published_at).toLocaleDateString('en-US', {
           year: 'numeric', month: 'long', day: 'numeric'
         });
-
-        // Parse markdown body into styled list items
         const bodyHtml = parseReleaseBody(rel.body || '');
-
         const isLatest = i === 0;
         const card = document.createElement('div');
         card.className = 'card changelog-entry';
@@ -1803,19 +1839,14 @@ Final text response delivered back to the transport</code></div>
             <a href="${escHtml(rel.html_url)}" target="_blank" style="font-family:var(--mono);font-size:.72rem;color:var(--blue);text-decoration:none;transition:color .15s;" onmouseover="this.style.color='var(--orange)'" onmouseout="this.style.color='var(--blue)'">View on GitHub ↗</a>
           </div>
         `;
-        container.appendChild(card);
+        frag.appendChild(card);
       });
 
-    } catch (err) {
-      // Fallback: show static changelog if GitHub unavailable
-      loading.innerHTML = `
-        <div style="font-family:var(--mono);font-size:.78rem;color:var(--muted);margin-bottom:20px;">
-          <span style="color:var(--orange);">!</span> Couldn't reach GitHub API — showing cached changelog.
-        </div>
-        ${staticChangelog()}
-      `;
-      loading.style.textAlign = 'left';
-      loading.style.padding = '32px';
+      // Swap static for live — smooth, no flash
+      staticEl.replaceWith(frag);
+
+    } catch (e) {
+      // Network error — static content already showing, do nothing
     }
   }
 
@@ -1824,73 +1855,26 @@ Final text response delivered back to the transport</code></div>
     const lines = md.split('\n');
     let html = '<ul class="changelog-list" style="margin-top:4px;">';
     let hasItems = false;
-
     lines.forEach(line => {
       const trimmed = line.trim();
-      if (!trimmed) return;
-      // Skip heading lines
-      if (trimmed.startsWith('#')) return;
-
+      if (!trimmed || trimmed.startsWith('#')) return;
       let cls = '';
       let text = trimmed.replace(/^[-*+]\s*/, '');
-
       if (/^[-*+]\s*\*\*(feat|add|new)/i.test(trimmed) || /^[-*+]\s*(feat|add|new)/i.test(trimmed)) cls = 'feat';
       else if (/^[-*+]\s*\*\*(fix|bug|patch)/i.test(trimmed) || /^[-*+]\s*(fix|bug|patch)/i.test(trimmed)) cls = 'fix';
-
       if (trimmed.startsWith('-') || trimmed.startsWith('*') || trimmed.startsWith('+')) {
-        // inline code in backticks
         text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
-        // bold
         text = text.replace(/\*\*([^*]+)\*\*/g, '<strong style="color:var(--text)">$1</strong>');
         html += `<li class="${cls}">${text}</li>`;
         hasItems = true;
       }
     });
-
     html += '</ul>';
     return hasItems ? html : `<p style="color:var(--muted);font-size:.875rem;">${escHtml(md.trim()).replace(/\n/g,'<br>')}</p>`;
   }
 
   function escHtml(str) {
     return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-
-  function staticChangelog() {
-    return `
-      <div class="changelog-entry" style="border-bottom:1px solid var(--border);padding-bottom:24px;margin-bottom:24px;">
-        <div class="changelog-version" style="color:var(--orange);background:var(--orange-lo);border-color:rgba(255,107,43,.35);">v0.9.0</div>
-        <div class="changelog-date">Latest · 2026</div>
-        <ul class="changelog-list" style="margin-top:12px;">
-          <li class="feat">MCP server with full plugin tool exposure</li>
-          <li class="feat">Browser plugin (headless Chromium)</li>
-          <li class="feat">Gmail &amp; Calendar beta plugins via OAuth 2.0</li>
-          <li class="feat">Hot-swap AI providers with <code>conductor ai switch</code></li>
-          <li class="fix">Fixed Spotify token refresh race condition</li>
-          <li class="fix">Fixed shell plugin path traversal edge cases</li>
-          <li>Added <code>--json</code> flag to all CLI commands</li>
-        </ul>
-      </div>
-      <div class="changelog-entry" style="border-bottom:1px solid var(--border);padding-bottom:24px;margin-bottom:24px;">
-        <div class="changelog-version">v0.8.0</div>
-        <div class="changelog-date">2026</div>
-        <ul class="changelog-list" style="margin-top:12px;">
-          <li class="feat">Telegram bot plugin with user ID whitelisting</li>
-          <li class="feat">AES-256-GCM keychain — all secrets encrypted at rest</li>
-          <li class="feat">Google Gemini 1.5 provider</li>
-          <li class="fix">Fixed notes full-text index rebuild on large vaults</li>
-        </ul>
-      </div>
-      <div class="changelog-entry">
-        <div class="changelog-version">v0.7.0</div>
-        <div class="changelog-date">2026</div>
-        <ul class="changelog-list" style="margin-top:12px;">
-          <li class="feat">Ollama local model support — full offline mode</li>
-          <li class="feat">Notes, Files plugins</li>
-          <li class="feat">OpenAI GPT-4o provider</li>
-          <li>ProviderAdapter abstraction layer</li>
-        </ul>
-      </div>
-    `;
   }
 
   // ── Hash routing ─────────────────────────────────────────────
