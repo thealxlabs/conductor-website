@@ -4,198 +4,226 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Conductor — Advanced Agentic Orchestration</title>
+  <meta name="description" content="Conductor is an advanced agentic orchestration framework that unifies disparate tools and automates complex workflows through natural language." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #080808;
-      --panel: rgba(255,255,255,.04);
-      --panel2: rgba(255,255,255,.08);
-      --border: rgba(255,255,255,.09);
-      --text: #ffffff;
-      --muted: rgba(255,255,255,.5);
-      --dim: rgba(255,255,255,.2);
-      --blue: #4d9fff;
-      --orange: #ff6b2b;
-      --orange-lo: rgba(255,107,43,.1);
-      --green: #3dffa0;
-      --sans: 'Syne', system-ui, sans-serif;
-      --mono: 'IBM Plex Mono', monospace;
+      --bg:       #080808;
+      --panel:    rgba(255,255,255,.04);
+      --panel2:   rgba(255,255,255,.07);
+      --border:   rgba(255,255,255,.09);
+      --border-hi:rgba(255,255,255,.2);
+      --text:     #ffffff;
+      --muted:    rgba(255,255,255,.5);
+      --dim:      rgba(255,255,255,.25);
+      --blue:     #4d9fff;
+      --blue-lo:  rgba(77,159,255,.12);
+      --orange:   #ff6b2b;
+      --orange-lo:rgba(255,107,43,.12);
+      --green:    #3dffa0;
+      --green-lo: rgba(61,255,160,.1);
+      --purple:   #a855f7;
+      --purple-lo:rgba(168,85,247,.08);
+      --sans:     'Syne', system-ui, sans-serif;
+      --mono:     'IBM Plex Mono', monospace;
+      --glow-b:   0 0 60px rgba(77,159,255,.2);
+      --glow-o:   0 0 60px rgba(255,107,43,.25);
     }
 
     * { margin:0; padding:0; box-sizing:border-box; }
     html { scroll-behavior: smooth; }
+
     body {
       font-family: var(--sans); background: var(--bg); color: var(--text);
-      line-height: 1.6; overflow-x: hidden; -webkit-font-smoothing: antialiased;
+      min-height: 100vh; -webkit-font-smoothing: antialiased; line-height: 1.65;
+      overflow-x: hidden;
+      background-image:
+        radial-gradient(ellipse 80% 50% at 20% -10%, rgba(255,107,43,.08) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 110%, rgba(77,159,255,.07) 0%, transparent 60%);
     }
 
-    /* Grid Background */
     body::before {
-      content:''; position:fixed; inset:0; z-index:0;
-      background-image: linear-gradient(rgba(255,255,255,.02) 1px, transparent 1px), 
-                        linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px);
-      background-size: 50px 50px; pointer-events:none;
+      content:''; position:fixed; inset:0;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity:.025; pointer-events:none; z-index:1000;
     }
+
+    body::after {
+      content:''; position:fixed; inset:0;
+      background-image:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+      background-size: 60px 60px; pointer-events:none; z-index:0;
+    }
+
+    ::selection { background:var(--orange); color:#fff; }
+    a { color:inherit; text-decoration:none; }
+    code { font-family: var(--mono); font-size:.82em; color: var(--orange); background: var(--orange-lo); padding: 2px 6px; border-radius: 3px; }
 
     nav {
-      position: fixed; top:0; width:100%; z-index: 1000;
-      background: rgba(8,8,8,.8); backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border);
+      position: fixed; top:0; width:100%;
+      background: rgba(8,8,8,.75); backdrop-filter: blur(24px) saturate(1.8); -webkit-backdrop-filter: blur(24px) saturate(1.8);
+      border-bottom: 1px solid rgba(255,255,255,.08); z-index: 999;
     }
-    .nav-inner {
-      max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 64px;
-      display: flex; justify-content: space-between; align-items: center;
-    }
-    .logo { font-family: var(--mono); font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 1.1rem; }
-    .nav-links { display: flex; gap: 4px; overflow-x: auto; }
-    .nav-links a {
-      color: var(--muted); font-size: .7rem; font-family: var(--mono);
-      padding: 6px 10px; border-radius: 4px; cursor: pointer; transition: .2s;
-      white-space: nowrap;
-    }
-    .nav-links a:hover, .nav-links a.active { color: var(--text); background: var(--panel); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 32px; height: 60px; display: flex; justify-content: space-between; align-items: center; }
+    .logo { font-family: var(--mono); font-size: 1rem; font-weight: 700; color: var(--text); letter-spacing: -.5px; display: flex; align-items: center; gap: 10px; cursor: pointer; }
+    .logo-mark { width: 28px; height: 28px; background: linear-gradient(135deg, var(--orange), #ff9a6b); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: .65rem; color: #fff; font-weight: 700; box-shadow: var(--glow-o); }
+    .nav-links { display: flex; gap: 2px; align-items: center; }
+    .nav-links a { color: var(--muted); font-size: .75rem; font-weight: 600; padding: 6px 12px; border-radius: 4px; transition: all .2s; cursor: pointer; letter-spacing: .3px; font-family: var(--mono); text-transform: uppercase; }
+    .nav-links a:hover { color: var(--text); background: rgba(255,255,255,.05); }
+    .nav-links a.active { color: var(--text); background: rgba(255,255,255,.07); }
+    .nav-github { display: flex; align-items: center; gap: 6px; color: var(--muted) !important; border: 1px solid var(--border) !important; font-size: .75rem !important; }
 
-    main { max-width: 900px; margin: 0 auto; padding: 120px 24px 80px; position: relative; z-index: 1; }
+    main { padding: 90px 32px 80px; max-width:1200px; margin:0 auto; width:100%; position: relative; z-index:1; }
+
+    footer { border-top: 1px solid var(--border); padding: 40px 32px; position: relative; z-index: 1; }
+    .footer-inner { max-width: 1200px; margin:0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+    .footer-credit { font-family: var(--mono); font-size: .75rem; color: var(--muted); }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a { font-family: var(--mono); font-size: .72rem; color: var(--muted); cursor: pointer; }
+    .footer-links a:hover { color: var(--text); }
+
+    .card { background: rgba(255,255,255,.04); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,.09); padding: 32px; border-radius: 8px; margin-bottom: 24px; position: relative; overflow: hidden; }
+    .card::before { content:''; position:absolute; top:0; left:0; width:3px; height:100%; background:rgba(255,255,255,.08); }
+    .card:hover::before { background: var(--orange); }
+    .card h2 { font-family: var(--mono); font-size:1.05rem; font-weight:700; margin-bottom: 18px; color: var(--text); }
+    .card h3 { font-family: var(--mono); font-size: .85rem; font-weight: 600; margin: 28px 0 10px; color: var(--blue); }
+    .card p { color: var(--muted); margin-bottom: 14px; font-size: .9rem; line-height: 1.7; }
+
+    .badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,.04); border: 1px solid var(--border); padding: 4px 12px; border-radius: 20px; font-family: var(--mono); font-size: .68rem; color: var(--muted); margin-bottom: 22px; }
+    .dot-live { width:6px; height:6px; border-radius:50%; background: var(--green); animation: pulse 2s infinite; display: inline-block; }
+    @keyframes pulse { 0% { box-shadow:0 0 0 0 rgba(61,255,160,.6); } 70% { box-shadow:0 0 0 8px rgba(61,255,160,0); } 100% { box-shadow:0 0 0 0 rgba(61,255,160,0); } }
+
+    .terminal-block { background: rgba(0,0,0,.5); border: 1px solid rgba(255,255,255,.08); border-radius: 6px; overflow: hidden; margin: 16px 0; font-family: var(--mono); position: relative; }
+    .terminal-header { background: rgba(255,255,255,.04); border-bottom: 1px solid rgba(255,255,255,.07); padding: 8px 14px; display: flex; align-items: center; gap: 10px; font-size: .7rem; color: var(--dim); }
+    .tdots span { width:10px; height:10px; border-radius:50%; display:inline-block; }
+    .dr { background:#ff5f57; } .dy { background:#febc2e; } .dg { background:#28c840; }
+    .terminal-body { padding: 18px 20px; font-size: .78rem; line-height: 2; color: var(--text); }
+    .copy-btn { position: absolute; top: 8px; right: 10px; background: var(--panel2); border: 1px solid var(--border); color: var(--muted); font-family: var(--mono); font-size: .6rem; padding: 4px 8px; border-radius: 3px; cursor: pointer; }
+
+    .hero-title { font-size: clamp(3rem, 9vw, 5.5rem); font-weight: 800; letter-spacing: -4px; line-height: .95; margin-bottom: 28px; }
+    .hero-title .line2 { background: linear-gradient(120deg, var(--orange), #ff9a6b, var(--blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; background-size: 200%; animation: shimmer 4s linear infinite; }
+    @keyframes shimmer { from { background-position: -200% center; } to { background-position: 200% center; } }
+    .cursor { display: inline-block; width: 14px; height: 50px; background: var(--orange); vertical-align: middle; margin-left: 6px; animation: blink 1s step-end infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    .page { display:none; animation: fadeUp .6s cubic-bezier(.16,1,.3,1) forwards; }
+    .page.active { display:block; }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+
+    .grid-3 { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:20px; }
+    .feature-card { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); padding: 28px; border-radius: 8px; }
+    .section-title { font-family: var(--mono); font-size: .68rem; font-weight: 700; color: var(--dim); letter-spacing: 2.5px; text-transform: uppercase; margin: 60px 0 18px; }
     
-    .page { display: none; animation: fadeIn .4s ease forwards; }
-    .page.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-    .hero-title { font-size: clamp(3rem, 8vw, 5rem); font-weight: 800; letter-spacing: -3px; line-height: 0.9; margin-bottom: 32px; }
-    .hero-title span { color: var(--orange); }
-    
-    .section-label { font-family: var(--mono); font-size: .65rem; color: var(--orange); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; display: block; }
-    
-    .card { background: var(--panel); border: 1px solid var(--border); padding: 32px; border-radius: 12px; margin-bottom: 24px; }
-    .card h2 { font-family: var(--mono); font-size: 1.25rem; margin-bottom: 16px; color: var(--text); }
-    .card h3 { font-size: 1rem; margin: 24px 0 12px; color: var(--blue); font-family: var(--mono); }
-    
-    .terminal { 
-      background: #000; border: 1px solid var(--border); padding: 16px 20px; 
-      border-radius: 8px; font-family: var(--mono); font-size: 0.85rem; 
-      position: relative; display: flex; align-items: center; justify-content: space-between;
-      margin: 16px 0;
-    }
-    .terminal code { color: var(--green); }
-    .copy-btn { 
-      background: var(--panel2); border: 1px solid var(--border); color: #fff; 
-      padding: 5px 10px; font-size: 0.65rem; cursor: pointer; border-radius: 4px; font-family: var(--mono);
-    }
-    .copy-btn:hover { background: var(--orange); border-color: var(--orange); }
-
-    .legal-text { font-size: 0.9rem; color: var(--muted); line-height: 1.7; }
-    .legal-text p { margin-bottom: 16px; }
-    .legal-text ul { margin: 0 0 16px 20px; }
-
-    footer { border-top: 1px solid var(--border); padding: 40px 24px; text-align: center; font-family: var(--mono); font-size: 0.7rem; color: var(--dim); }
-
-    @media (max-width: 600px) {
-      .hero-title { font-size: 3rem; }
-      .nav-inner { padding: 0 16px; }
-      .card { padding: 20px; }
-    }
+    .changelog-entry { padding: 24px 0; border-bottom: 1px solid var(--border); }
+    .changelog-version { font-family: var(--mono); font-size: .72rem; font-weight: 700; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); color: var(--text); padding: 3px 10px; border-radius: 3px; display: inline-block; margin-bottom: 8px; }
+    .changelog-list { list-style: none; display: flex; flex-direction: column; gap: 6px; color: var(--muted); font-size: .85rem; }
+    .changelog-list li::before { content: '→'; color: var(--blue); margin-right: 10px; font-family: var(--mono); }
   </style>
 </head>
 <body>
 
 <nav>
   <div class="nav-inner">
-    <div class="logo" onclick="showPage('home')">⌁ CONDUCTOR</div>
+    <div class="logo" onclick="showPage('home')"><div class="logo-mark">⌁</div>conductor</div>
     <div class="nav-links">
-      <a id="link-home" class="active" onclick="showPage('home')">OVERVIEW</a>
-      <a id="link-docs" onclick="showPage('docs')">DOCS</a>
-      <a id="link-changelog" onclick="showPage('changelog')">CHANGELOG</a>
-      <a id="link-license" onclick="showPage('license')">LICENSE</a>
-      <a id="link-tos" onclick="showPage('tos')">TOS</a>
-      <a id="link-privacy" onclick="showPage('privacy')">PRIVACY</a>
+      <a id="nav-home" class="active" onclick="showPage('home')">Overview</a>
+      <a id="nav-docs" onclick="showPage('docs')">Docs</a>
+      <a id="nav-changelog" onclick="showPage('changelog')">Changelog</a>
+      <a id="nav-tos" onclick="showPage('tos')">ToS</a>
+      <a id="nav-privacy" onclick="showPage('privacy')">Privacy</a>
     </div>
   </div>
 </nav>
 
 <main>
-  <section id="page-home" class="page active">
-    <span class="section-label">// Orchestration Engine</span>
-    <h1 class="hero-title">Automate<br><span>Everything.</span></h1>
+  <div id="page-home" class="page active">
+    <div class="badge"><span class="dot-live"></span> v0.9 · Open Source · Apache 2.0</div>
+    <h1 class="hero-title">Automate<br><span class="line2">Everything<span class="cursor"></span></span></h1>
+    <p style="color:var(--muted); font-size:1.1rem; max-width:600px; margin-bottom:40px;">
+      Conductor unifies AI providers, local tools, and external APIs into a single intelligent agent you control. Zero cloud lock-in.
+    </p>
     <div class="card">
-      <h2>Quick Install</h2>
-      <p style="color:var(--muted); margin-bottom:12px;">Run the setup wizard to configure your local environment and AI providers.</p>
-      <div class="terminal">
-        <code>curl -fsSL https://conductor.sh/install.sh | bash</code>
-        <button class="copy-btn" onclick="copy('curl -fsSL https://conductor.sh/install.sh | bash', this)">COPY</button>
+      <h2>⚡ Quick Install</h2>
+      <div class="terminal-block">
+        <div class="terminal-header"><div class="tdots"><span class="dr"></span><span class="dy"></span><span class="dg"></span></div><span>bash</span></div>
+        <div class="terminal-body"><code>$ curl -fsSL https://conductor.sh/install.sh | bash</code></div>
+        <button class="copy-btn" onclick="copyText('curl -fsSL https://conductor.sh/install.sh | bash')">copy</button>
       </div>
     </div>
-  </section>
-
-  <section id="page-docs" class="page">
-    <span class="section-label">// Documentation</span>
-    <div class="card">
-      <h2>Technical Overview</h2>
-      <p>Conductor unifies AI providers (OpenAI, Anthropic, Ollama) with a local tool-calling loop. It functions by:</p>
-      <h3 style="margin-top:20px;">1. Tool Discovery</h3>
-      <p class="legal-text">Each plugin exports a JSON Schema. Upon startup, Conductor registers these capabilities into the LLM system prompt.</p>
-      <h3>2. The Agentic Loop</h3>
-      <p class="legal-text">The agent analyzes user intent, selects a tool, executes it locally, and feeds the output back into the model until the goal is met.</p>
-      <h3>3. Environment Management</h3>
-      <p class="legal-text">All tool execution happens within a defined permission scope. Shell commands require explicit user confirmation by default.</p>
+    <p class="section-title">// Core Pillars</p>
+    <div class="grid-3">
+      <div class="feature-card"><h3>Agentic Loop</h3><p>Multi-step reasoning with iterative tool invocation.</p></div>
+      <div class="feature-card"><h3>Plugin-Driven</h3><p>Capabilities exposed via typed JSON Schema definitions.</p></div>
+      <div class="feature-card"><h3>Local-First</h3><p>AES-256 encrypted vault. Zero cloud telemetry.</p></div>
     </div>
-  </section>
+  </div>
 
-  <section id="page-changelog" class="page">
-    <span class="section-label">// History</span>
+  <div id="page-docs" class="page">
     <div class="card">
-      <h2>Version History</h2>
-      <h3>v0.9.0 (2026-02-01)</h3>
-      <p class="legal-text">• Added support for DeepSeek-V3 via OpenRouter.<br>• Implementation of AES-256-GCM for credential storage.<br>• New Plugin: Spotify Playback Control.</p>
-      <h3>v0.8.5 (2026-01-15)</h3>
-      <p class="legal-text">• Refactored ProviderAdapter for lower latency.<br>• Fixed memory leak in long-running agent loops.</p>
+      <h2>Documentation</h2>
+      <p>Conductor is a local-first agentic orchestration framework. It utilizes JSON Schema-based tool definitions to allow LLMs to interact with your local environment and external APIs.</p>
     </div>
-  </section>
+  </div>
 
-  <section id="page-license" class="page">
-    <span class="section-label">// Open Source</span>
+  <div id="page-changelog" class="page">
     <div class="card">
-      <h2>Apache License 2.0</h2>
-      <p class="legal-text">Conductor is licensed under the Apache License, Version 2.0. You may obtain a copy of the License at <a href="http://www.apache.org/licenses/LICENSE-2.0" style="color:var(--blue)">apache.org/licenses/LICENSE-2.0</a>.</p>
-      <p class="legal-text" style="margin-top:10px;">Essentially: You can use, modify, and distribute this software for any purpose, but you must include the original copyright notice and disclaimer.</p>
+      <h2>Release Notes</h2>
+      <div class="changelog-entry">
+        <div class="changelog-version">v0.9.0</div>
+        <ul class="changelog-list">
+          <li>Added support for DeepSeek-V3 via OpenRouter</li>
+          <li>Implementation of AES-256-GCM for credential storage</li>
+          <li>New Plugin: Spotify Playback Control</li>
+        </ul>
+      </div>
+      <div class="changelog-entry">
+        <div class="changelog-version">v0.8.5</div>
+        <ul class="changelog-list">
+          <li>Refactored ProviderAdapter for lower latency</li>
+          <li>Fixed memory leak in long-running agent loops</li>
+        </ul>
+      </div>
     </div>
-  </section>
+  </div>
 
-  <section id="page-tos" class="page">
-    <span class="section-label">// Legal</span>
+  <div id="page-tos" class="page">
     <div class="card">
       <h2>Terms of Service</h2>
-      <div class="legal-text">
-        <p>Last Updated: February 2026</p>
-        <h3>1. Acceptance of Terms</h3>
-        <p>By installing Conductor, you acknowledge that this is an autonomous agent framework. You are responsible for all actions performed by the software on your local machine.</p>
-        <h3>2. Safe Use</h3>
-        <p>You agree not to use Conductor for illegal activities, including unauthorized network scanning, automated credential stuffing, or creation of malware.</p>
-        <h3>3. Limitation of Liability</h3>
-        <p>ALXLABS provides this software "as is." We are not responsible for data loss, hardware damage, or API costs incurred by autonomous agent loops.</p>
-      </div>
+      <p>Last Updated: February 2026</p>
+      <h3>1. Agreement to Terms</h3>
+      <p>By using Conductor, you agree to these terms. Conductor is an automation framework; you are responsible for the actions of any agents you configure.</p>
+      <h3>2. Local Execution Risk</h3>
+      <p>Conductor executes commands on your local machine. You acknowledge that granting an AI agent access to your shell or filesystem carries inherent risks. We are not liable for any data loss or system damage.</p>
+      <h3>3. API Costs</h3>
+      <p>You are responsible for all costs incurred through third-party AI providers (OpenAI, Anthropic, etc.) connected to Conductor.</p>
     </div>
-  </section>
+  </div>
 
-  <section id="page-privacy" class="page">
-    <span class="section-label">// Compliance</span>
+  <div id="page-privacy" class="page">
     <div class="card">
       <h2>Privacy Policy</h2>
-      <div class="legal-text">
-        <p>Last Updated: February 2026</p>
-        <h3>1. Local-Only Processing</h3>
-        <p>Conductor is built on a "Zero-Telemetry" architecture. We do not track your usage, IP address, or prompts. No data is sent to ALXLABS.</p>
-        <h3>2. Third-Party API Interaction</h3>
-        <p>Conductor connects directly to the API endpoints you configure (e.g., api.openai.com). Your data is subject to the privacy policies of those specific providers.</p>
-        <h3>3. Credential Security</h3>
-        <p>API keys are stored in <code>~/.conductor/config.enc</code>. They are encrypted using a master password that is never stored in plaintext and never transmitted.</p>
-      </div>
+      <p>Last Updated: February 2026</p>
+      <h3>1. Zero Telemetry</h3>
+      <p>We do not collect, store, or sell your data. Conductor does not include tracking scripts, usage analytics, or remote logging. All operation is local.</p>
+      <h3>2. Data Flow</h3>
+      <p>Your prompts and tool outputs are sent directly to the AI providers you configure. Your API keys are stored only on your machine in an encrypted vault.</p>
+      <h3>3. Encryption</h3>
+      <p>Local configuration is protected with AES-256-GCM. Your master key never leaves your device.</p>
     </div>
-  </section>
+  </div>
 </main>
 
 <footer>
-  &copy; 2026 ALXLABS. NO TELEMETRY. NO TRACKING. JUST TOOLS.
+  <div class="footer-inner">
+    <div class="footer-credit">© 2026 ALXLABS. Built for agents.</div>
+    <div class="footer-links">
+      <a onclick="showPage('changelog')">Changelog</a>
+      <a onclick="showPage('tos')">ToS</a>
+      <a onclick="showPage('privacy')">Privacy</a>
+    </div>
+  </div>
 </footer>
 
 <script>
@@ -203,28 +231,15 @@
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
     
-    const targetPage = document.getElementById('page-' + id);
-    const targetLink = document.getElementById('link-' + id);
-    
-    if(targetPage && targetLink) {
-      targetPage.classList.add('active');
-      targetLink.classList.add('active');
-      window.scrollTo(0,0);
-    }
+    document.getElementById('page-' + id).classList.add('active');
+    const navLink = document.getElementById('nav-' + id);
+    if(navLink) navLink.classList.add('active');
+    window.scrollTo(0,0);
   }
 
-  function copy(text, btn) {
-    navigator.clipboard.writeText(text).then(() => {
-      const originalText = btn.innerText;
-      btn.innerText = 'COPIED';
-      btn.style.background = 'var(--green)';
-      btn.style.color = '#000';
-      setTimeout(() => {
-        btn.innerText = originalText;
-        btn.style.background = 'var(--panel2)';
-        btn.style.color = '#fff';
-      }, 2000);
-    });
+  function copyText(text) {
+    navigator.clipboard.writeText(text);
+    alert('Copied to clipboard');
   }
 </script>
 
