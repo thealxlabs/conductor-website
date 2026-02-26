@@ -136,6 +136,24 @@
     }
     .nav-links a:hover { color: var(--text); background: rgba(255,255,255,.05); }
     .nav-links a.active { color: var(--text); background: rgba(255,255,255,.07); }
+
+    /* ── BETA NAV PILL ── */
+    .nav-beta {
+      color: var(--orange) !important;
+      border: 1px solid rgba(255,107,43,.35) !important;
+      background: rgba(255,107,43,.07) !important;
+    }
+    .nav-beta:hover {
+      border-color: rgba(255,107,43,.7) !important;
+      background: rgba(255,107,43,.14) !important;
+      color: #fff !important;
+    }
+    .nav-beta.active {
+      border-color: var(--orange) !important;
+      background: var(--orange-lo) !important;
+      color: var(--orange) !important;
+    }
+
     .nav-github {
       display: flex; align-items: center; gap: 6px;
       color: var(--muted) !important;
@@ -571,9 +589,7 @@
     }
 
     /* === QUICK COPY === */
-    .copy-wrap {
-      position: relative;
-    }
+    .copy-wrap { position: relative; }
     .copy-btn {
       position: absolute; top: 10px; right: 10px;
       background: var(--panel2); border: 1px solid var(--border);
@@ -647,6 +663,153 @@
     .changelog-list .feat::before { content: '+'; color: var(--orange); font-weight: 700; }
     .changelog-list .fix::before  { content: '✕'; color: rgba(255,255,255,.3); }
 
+    /* ====================================================
+       WAITLIST PAGE
+    ==================================================== */
+    .waitlist-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+    @media (max-width: 860px) { .waitlist-grid { grid-template-columns: 1fr; } }
+
+    .wl-label {
+      font-family: var(--mono); font-size: .68rem; font-weight: 700;
+      letter-spacing: 1px; text-transform: uppercase; color: var(--dim);
+      display: block; margin-bottom: 7px;
+    }
+    .wl-input {
+      width: 100%;
+      background: rgba(0,0,0,.5);
+      border: 1px solid rgba(255,255,255,.1);
+      color: var(--text);
+      padding: 11px 14px;
+      border-radius: 4px;
+      font-family: var(--sans);
+      font-size: .875rem;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .wl-input:focus {
+      border-color: var(--orange);
+      box-shadow: 0 0 0 3px rgba(255,107,43,.12);
+    }
+    .wl-input::placeholder { color: var(--dim); }
+    select.wl-input {
+      cursor: pointer;
+      appearance: none; -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='rgba(255,255,255,0.25)' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+    }
+
+    .wl-btn {
+      width: 100%;
+      background: var(--orange);
+      border: none; color: #fff;
+      padding: 13px;
+      border-radius: 4px;
+      font-family: var(--mono);
+      font-weight: 700; font-size: .82rem; letter-spacing: .5px;
+      cursor: pointer;
+      transition: all .2s;
+      box-shadow: 0 0 24px rgba(255,107,43,.35);
+      margin-top: 6px;
+    }
+    .wl-btn:hover { background: #ff8550; box-shadow: 0 0 40px rgba(255,107,43,.55); transform: translateY(-1px); }
+    .wl-btn:disabled { opacity: .4; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    .wl-step { display: flex; gap: 14px; align-items: flex-start; }
+    .wl-step-num {
+      font-family: var(--mono); font-size: .7rem; font-weight: 700;
+      color: var(--orange); background: var(--orange-lo);
+      border: 1px solid rgba(255,107,43,.25);
+      padding: 3px 9px; border-radius: 3px;
+      flex-shrink: 0; margin-top: 2px;
+    }
+
+    .wl-avail-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 11px 14px; border-radius: 4px;
+    }
+    .wl-avail-stable { background: rgba(61,255,160,.05); border: 1px solid rgba(61,255,160,.15); }
+    .wl-avail-beta   { background: var(--orange-lo); border: 1px solid rgba(255,107,43,.2); }
+    .wl-tag { font-family: var(--mono); font-size: .75rem; font-weight: 700; min-width: 56px; }
+    .wl-tag-green { color: var(--green); }
+    .wl-tag-orange { color: var(--orange); }
+
+    .wl-faq-item { padding: 14px 0; border-bottom: 1px solid var(--border); }
+    .wl-faq-item:last-child { border-bottom: none; }
+    .wl-faq-q { font-family: var(--mono); font-size: .8rem; font-weight: 700; color: var(--text); margin-bottom: 5px; }
+    .wl-faq-a { color: var(--muted); font-size: .82rem; line-height: 1.65; }
+
+
+    /* ====================================================
+       WAITLIST PAGE
+    ==================================================== */
+    .waitlist-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+    @media (max-width: 860px) { .waitlist-grid { grid-template-columns: 1fr; } }
+
+    .wl-label {
+      font-family: var(--mono); font-size: .68rem; font-weight: 700;
+      letter-spacing: 1px; text-transform: uppercase; color: var(--dim);
+      display: block; margin-bottom: 7px;
+    }
+    .wl-input {
+      width: 100%; background: rgba(0,0,0,.5);
+      border: 1px solid rgba(255,255,255,.1); color: var(--text);
+      padding: 11px 14px; border-radius: 4px;
+      font-family: var(--sans); font-size: .875rem; outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .wl-input:focus { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(255,107,43,.12); }
+    .wl-input::placeholder { color: var(--dim); }
+    select.wl-input {
+      cursor: pointer; appearance: none; -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='rgba(255,255,255,0.25)' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px;
+    }
+    .wl-btn {
+      width: 100%; background: var(--orange); border: none; color: #fff;
+      padding: 13px; border-radius: 4px; font-family: var(--mono);
+      font-weight: 700; font-size: .82rem; letter-spacing: .5px;
+      cursor: pointer; transition: all .2s; margin-top: 6px;
+      box-shadow: 0 0 24px rgba(255,107,43,.35);
+    }
+    .wl-btn:hover { background: #ff8550; box-shadow: 0 0 40px rgba(255,107,43,.55); transform: translateY(-1px); }
+    .wl-btn:disabled { opacity: .4; cursor: not-allowed; transform: none; box-shadow: none; }
+    .wl-step { display: flex; gap: 14px; align-items: flex-start; }
+    .wl-step-num {
+      font-family: var(--mono); font-size: .7rem; font-weight: 700;
+      color: var(--orange); background: var(--orange-lo);
+      border: 1px solid rgba(255,107,43,.25);
+      padding: 3px 9px; border-radius: 3px; flex-shrink: 0; margin-top: 2px;
+    }
+    .wl-avail-row { display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-radius: 4px; }
+    .wl-avail-stable { background: rgba(61,255,160,.05); border: 1px solid rgba(61,255,160,.15); }
+    .wl-avail-beta   { background: var(--orange-lo); border: 1px solid rgba(255,107,43,.2); }
+    .wl-tag { font-family: var(--mono); font-size: .75rem; font-weight: 700; min-width: 56px; }
+    .wl-tag-green { color: var(--green); }
+    .wl-tag-orange { color: var(--orange); }
+    .wl-faq-item { padding: 14px 0; border-bottom: 1px solid var(--border); }
+    .wl-faq-item:last-child { border-bottom: none; }
+    .wl-faq-q { font-family: var(--mono); font-size: .8rem; font-weight: 700; color: var(--text); margin-bottom: 5px; }
+    .wl-faq-a { color: var(--muted); font-size: .82rem; line-height: 1.65; }
+    /* Beta nav pill */
+    .nav-beta {
+      color: var(--orange) !important;
+      border: 1px solid rgba(255,107,43,.35) !important;
+      background: rgba(255,107,43,.07) !important;
+    }
+    .nav-beta:hover { border-color: rgba(255,107,43,.7) !important; background: rgba(255,107,43,.14) !important; color: #fff !important; }
+    .nav-beta.active { border-color: var(--orange) !important; background: var(--orange-lo) !important; color: var(--orange) !important; }
     /* === RESPONSIVE === */
     @media (max-width: 640px) {
       .nav-links a { padding: 6px 8px; font-size: .75rem; }
@@ -669,9 +832,11 @@
         <a id="nav-home" class="active" onclick="showPage('home')" href="#">Overview</a>
         <a id="nav-docs" onclick="showPage('docs')" href="#docs">Docs</a>
         <a id="nav-changelog" onclick="showPage('changelog')" href="#changelog">Changelog</a>
+        <a id="nav-waitlist" class="nav-beta" onclick="showPage('waitlist')" href="#waitlist">Beta Access</a>
         <a id="nav-tos" onclick="showPage('tos')" href="#tos">Terms</a>
         <a id="nav-privacy" onclick="showPage('privacy')" href="#privacy">Privacy</a>
         <a id="nav-license" onclick="showPage('license')" href="#license" style="display:none"></a>
+        <a id="nav-waitlist" class="nav-beta" onclick="showPage('waitlist')" href="#waitlist">Beta Access</a>
         <a class="nav-github" href="https://github.com/thealxlabs/conductor" target="_blank">
           ↗ GitHub
         </a>
@@ -705,6 +870,8 @@
         <div class="hero-actions">
           <button class="btn" onclick="showPage('docs')">→ Read the Docs</button>
           <a class="btn btn-ghost" href="https://github.com/thealxlabs/conductor" target="_blank">GitHub ↗</a>
+          <button class="btn btn-ghost" onclick="showPage('waitlist')" style="border-color:rgba(255,107,43,.4);color:var(--orange);">🔑 Google Beta</button>
+          <button class="btn btn-ghost" onclick="showPage('waitlist')" style="border-color:rgba(255,107,43,.4);color:var(--orange);">🔑 Google Beta</button>
         </div>
 
         <div class="stats-row">
@@ -833,7 +1000,7 @@
             <span class="plugin-card-name">gmail</span>
             <span class="plugin-card-tools">9 tools · <span class="sp s-beta">beta</span></span>
           </div>
-          <p>Read, compose, send, and label Gmail via OAuth 2.0 minimal scopes. Tokens stored in your local encrypted vault.</p>
+          <p>Read, compose, send, and label Gmail via OAuth 2.0 minimal scopes. Tokens stored in your local encrypted vault. <span style="color:var(--orange);cursor:pointer;" onclick="showPage('waitlist')">Request access →</span></p>
           <div class="plugin-card-tags">
             <span class="tag">read</span><span class="tag">compose</span><span class="tag">labels</span>
           </div>
@@ -888,8 +1055,6 @@
         </aside>
 
         <div class="docs-content">
-
-          <!-- REAL INSTALLATION -->
 
           <!-- INSTALLATION -->
           <div class="card" id="di">
@@ -1259,6 +1424,7 @@ Final text response delivered back to the transport</code></div>
               <div class="terminal-body"><code><span class="cmd">$</span> conductor auth google   <span class="cmt"># opens browser → you log in → token saved to keychain</span></code></div>
             </div>
             <p>The OAuth flow requests only the scopes needed for your enabled plugins. Tokens are stored encrypted in <code>~/.conductor/keychain/google.access_token.enc</code> and refreshed automatically.</p>
+            <p>Google features require beta access while verification is ongoing. <span style="color:var(--orange);cursor:pointer;" onclick="showPage('waitlist')">Request access →</span></p>
             <p>Revoke access at any time: <a href="https://myaccount.google.com/permissions" target="_blank" style="color:var(--blue)">myaccount.google.com/permissions</a></p>
 
             <div class="callout callout-warn">
@@ -1420,7 +1586,6 @@ Final text response delivered back to the transport</code></div>
       </div>
 
       <div id="changelog-live" style="display:flex;flex-direction:column;gap:20px;">
-        <!-- Static entries shown immediately; replaced by live data if API succeeds -->
         <div id="changelog-static">
           <div class="card changelog-entry" style="border-bottom:none;padding:32px;">
             <div style="display:flex;align-items:center;gap:14px;margin-bottom:6px;flex-wrap:wrap;">
@@ -1468,6 +1633,148 @@ Final text response delivered back to the transport</code></div>
         </div>
       </div>
     </div>
+
+
+    <!-- ██████████████ WAITLIST PAGE ██████████████ -->
+    <div id="page-waitlist" class="page fade-in">
+      <div class="page-header">
+        <h1 class="page-title">BETA_ACCESS.md</h1>
+        <p class="page-sub">Google features — Gmail, Calendar, Drive — are invite-only while we complete Google's OAuth verification. All other plugins work immediately with no invite needed.</p>
+      </div>
+
+      <div class="waitlist-grid">
+
+        <!-- LEFT: Info -->
+        <div style="display:flex;flex-direction:column;gap:20px;">
+
+          <div class="card">
+            <h2>🔑 What's in Beta</h2>
+            <p>All plugins work immediately after install. Google features require a one-time invite because Google's verification process is ongoing.</p>
+            <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px;">
+              <div class="wl-avail-row wl-avail-stable">
+                <span class="wl-tag wl-tag-green">STABLE</span>
+                <span style="color:var(--muted);font-size:.85rem;">All 20+ non-Google plugins — available now, no waitlist</span>
+              </div>
+              <div class="wl-avail-row wl-avail-beta">
+                <span class="wl-tag wl-tag-orange">BETA</span>
+                <span style="color:var(--muted);font-size:.85rem;">Gmail · Google Calendar · Google Drive — invite required</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>⚡ What Beta Gets You</h2>
+            <ul class="tech-list">
+              <li><strong>Gmail</strong> — Read, compose, send, and label emails through natural language</li>
+              <li><strong>Google Calendar</strong> — Create, update, and query events across all your calendars</li>
+              <li><strong>Google Drive</strong> — Create, read, and manage files through conversation</li>
+              <li><strong>One-click connect</strong> — OAuth flow in the dashboard, no extra setup required</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h2>📋 How It Works</h2>
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <div class="wl-step">
+                <span class="wl-step-num">01</span>
+                <span style="color:var(--muted);font-size:.875rem;">Submit the form with your Gmail address</span>
+              </div>
+              <div class="wl-step">
+                <span class="wl-step-num">02</span>
+                <span style="color:var(--muted);font-size:.875rem;">We add your address to the beta — confirmation within 1–3 days</span>
+              </div>
+              <div class="wl-step">
+                <span class="wl-step-num">03</span>
+                <span style="color:var(--muted);font-size:.875rem;">Run <code>conductor auth google</code> or open the dashboard → click <strong style="color:var(--text)">Connect Google</strong></span>
+              </div>
+              <div class="wl-step">
+                <span class="wl-step-num">04</span>
+                <span style="color:var(--muted);font-size:.875rem;">Gmail, Calendar, and Drive plugins unlock automatically — no extra steps</span>
+              </div>
+            </div>
+            <div class="callout callout-success" style="margin-top:20px;">
+              <strong>Privacy:</strong> Your tokens stay in <code>~/.conductor/keychain/</code> — AES-256-GCM encrypted on your machine. We never see them.
+            </div>
+          </div>
+
+        </div>
+
+        <!-- RIGHT: Form + FAQ -->
+        <div style="display:flex;flex-direction:column;gap:20px;">
+
+          <div class="card" id="waitlist-card">
+            <h2>📬 Request Access</h2>
+            <p>We review requests manually and respond within 1–3 days.</p>
+
+            <div id="waitlist-form" style="margin-top:20px;display:flex;flex-direction:column;gap:14px;">
+
+              <div>
+                <label class="wl-label">Your Name</label>
+                <input id="wl-name" type="text" class="wl-input" placeholder="Alexander" autocomplete="name">
+              </div>
+
+              <div>
+                <label class="wl-label">Gmail Address <span style="color:var(--orange)">*</span></label>
+                <input id="wl-email" type="email" class="wl-input" placeholder="you@gmail.com" autocomplete="email" required onkeydown="if(event.key==='Enter')submitWaitlist()">
+              </div>
+
+              <div>
+                <label class="wl-label">What will you use it for?</label>
+                <textarea id="wl-use" class="wl-input" rows="3" placeholder="e.g. manage my inbox and schedule meetings through AI..." style="resize:vertical;font-family:var(--sans);"></textarea>
+              </div>
+
+              <div>
+                <label class="wl-label">How did you find Conductor?</label>
+                <select id="wl-how" class="wl-input">
+                  <option value="" disabled selected>Select one</option>
+                  <option value="github">GitHub</option>
+                  <option value="twitter">X / Twitter</option>
+                  <option value="friend">Friend / colleague</option>
+                  <option value="search">Search</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
+              <button onclick="submitWaitlist()" id="wl-btn" class="wl-btn">
+                REQUEST BETA ACCESS →
+              </button>
+
+              <p id="wl-err" style="display:none;font-family:var(--mono);font-size:.75rem;color:var(--orange);margin-top:-6px;"></p>
+            </div>
+
+            <!-- Success state -->
+            <div id="waitlist-success" style="display:none;flex-direction:column;align-items:center;gap:16px;padding:28px 0 12px;text-align:center;">
+              <div style="width:56px;height:56px;background:var(--green-lo);border:1px solid rgba(61,255,160,.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;animation:float 3s ease-in-out infinite;">✓</div>
+              <div>
+                <h3 style="font-family:var(--mono);font-size:1.1rem;font-weight:700;color:var(--green);margin-bottom:8px;">You're on the list</h3>
+                <p style="color:var(--muted);font-size:.875rem;max-width:300px;">We'll add your Gmail address and send a confirmation within 1–3 days. Check your inbox.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2 style="margin-bottom:16px;">FAQ</h2>
+            <div class="wl-faq-item">
+              <div class="wl-faq-q">Will I need to re-authenticate after joining?</div>
+              <div class="wl-faq-a">No. Once connected, your session persists until you manually disconnect.</div>
+            </div>
+            <div class="wl-faq-item">
+              <div class="wl-faq-q">Is the waitlist permanent?</div>
+              <div class="wl-faq-a">No. Once Google's verification process is complete, Google features become available to everyone with no invite needed.</div>
+            </div>
+            <div class="wl-faq-item">
+              <div class="wl-faq-q">Can I use Conductor without joining?</div>
+              <div class="wl-faq-a">Yes — all non-Google plugins (Claude, GitHub, Spotify, Notion, Telegram, etc.) work immediately with no restrictions.</div>
+            </div>
+            <div class="wl-faq-item">
+              <div class="wl-faq-q">Is my data stored anywhere?</div>
+              <div class="wl-faq-a">No. Conductor runs entirely on your machine. Tokens are AES-256-GCM encrypted in <code>~/.conductor/keychain/</code>. We never see your data.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div><!-- /waitlist -->
 
 
     <!-- ██████████████ LICENSE PAGE ██████████████ -->
@@ -1538,7 +1845,7 @@ Final text response delivered back to the transport</code></div>
       </div>
 
       <div class="card" style="margin-bottom:20px;">
-        <h3 style="color:var(--blue);margin-top:0">3. User Responsibilities & Acceptable Use</h3>
+        <h3 style="color:var(--blue);margin-top:0">3. User Responsibilities &amp; Acceptable Use</h3>
         <p>You are solely responsible for all actions taken by your Conductor instance, including any commands issued to AI providers, shell plugins, external APIs, or local filesystems. You agree to:</p>
         <ul class="tech-list" style="margin:12px 0 16px">
           <li>Operate Conductor in full compliance with all applicable local, national, and international laws and regulations</li>
@@ -1546,66 +1853,42 @@ Final text response delivered back to the transport</code></div>
           <li>Secure your local configuration files, API keys, and encrypted keychain against unauthorized access</li>
           <li>Use the software only for lawful purposes that do not infringe upon the rights of any third party</li>
         </ul>
-        <p>You expressly agree <strong style="color:var(--text)">not</strong> to use Conductor to:</p>
-        <ul class="tech-list" style="margin:12px 0">
-          <li>Gain unauthorized access to systems, networks, or accounts ("hacking," credential stuffing, brute-force attacks)</li>
-          <li>Transmit malware, ransomware, spyware, or other malicious code</li>
-          <li>Violate any third-party terms of service, including but not limited to those of Spotify, Google, Anthropic, OpenAI, or Telegram</li>
-          <li>Conduct automated scraping or data harvesting in violation of a website's robots.txt or terms of service</li>
-          <li>Harass, stalk, threaten, or harm any individual or group</li>
-          <li>Generate, distribute, or store illegal content of any kind</li>
-        </ul>
+        <p>You expressly agree <strong style="color:var(--text)">not</strong> to use Conductor to gain unauthorized access to systems, transmit malware, violate third-party terms of service, conduct unauthorized scraping, harass any individual, or generate illegal content.</p>
       </div>
 
       <div class="card" style="margin-bottom:20px;">
-        <h3 style="color:var(--blue);margin-top:0">4. Third-Party Services & Integrations</h3>
-        <p>Conductor connects to third-party APIs and services including, but not limited to: Spotify, Google (Gmail, Calendar), OpenAI, Anthropic (Claude), Telegram, Slack, GitHub, and any other services you configure via plugins. Your use of each such service is governed exclusively by that service's own terms of service and privacy policy.</p>
-        <p>AlxLabs is not affiliated with, endorsed by, or responsible for any third-party service. We are not liable for service outages, API changes, rate limiting, account suspensions, data loss, or any other consequence arising from your use of third-party integrations through Conductor.</p>
-        <p>When you provide API credentials to Conductor, those credentials are stored locally in your AES-256-GCM encrypted vault (<code>~/.conductor/</code>). They are never transmitted to AlxLabs servers.</p>
+        <h3 style="color:var(--blue);margin-top:0">4. Third-Party Services &amp; Integrations</h3>
+        <p>Conductor connects to third-party APIs and services including Spotify, Google (Gmail, Calendar), OpenAI, Anthropic (Claude), Telegram, Slack, GitHub, and others you configure. Your use of each is governed by that service's own terms. AlxLabs is not affiliated with or liable for any third-party service.</p>
       </div>
 
       <div class="card" style="margin-bottom:20px;">
         <h3 style="color:var(--blue);margin-top:0">5. Intellectual Property</h3>
-        <p>The Conductor source code, documentation, and associated assets are copyright © 2026 Alexander Wondwossen / TheAlxLabs and are licensed under the Apache License 2.0. You may use, modify, and redistribute the software in accordance with that license.</p>
-        <p>All content you create, store, or process using Conductor — including notes, workflows, configurations, and agent outputs — remains entirely your own intellectual property. AlxLabs claims no ownership, license, or rights of any kind over your data or creations.</p>
-        <p>"Conductor" and the associated logo/mark are trademarks of TheAlxLabs. You may not use these marks to imply endorsement of a product or service without written permission.</p>
+        <p>The Conductor source code and documentation are copyright © 2026 Alexander Wondwossen / TheAlxLabs, licensed under Apache 2.0. All content you create using Conductor remains entirely your own intellectual property. AlxLabs claims no ownership over your data or creations.</p>
       </div>
 
       <div class="card" style="margin-bottom:20px;">
-        <h3 style="color:var(--blue);margin-top:0">6. Open-Source Contributions</h3>
-        <p>Contributions to Conductor via pull requests, issues, or other means are subject to the project's contribution guidelines and the Contributor License Agreement (CLA) implicit in the Apache 2.0 license. By submitting a contribution, you represent that you have the right to grant the licenses described in the Apache 2.0 license and that your contribution does not infringe any third-party intellectual property rights.</p>
+        <h3 style="color:var(--blue);margin-top:0">6. Disclaimer of Warranties</h3>
+        <p>TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, CONDUCTOR IS PROVIDED "AS IS" WITHOUT ANY WARRANTIES OF ANY KIND. USE IS ENTIRELY AT YOUR OWN RISK.</p>
       </div>
 
       <div class="card" style="margin-bottom:20px;">
-        <h3 style="color:var(--blue);margin-top:0">7. Disclaimer of Warranties</h3>
-        <p>TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, CONDUCTOR IS PROVIDED "AS IS" AND "AS AVAILABLE," WITHOUT ANY EXPRESS, IMPLIED, STATUTORY, OR OTHER WARRANTIES OF ANY KIND, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND NON-INFRINGEMENT.</p>
-        <p>AlxLabs does not warrant that: (a) the software will meet your requirements; (b) the software will be uninterrupted, timely, secure, or error-free; (c) results obtained from use of the software will be accurate or reliable; or (d) any errors in the software will be corrected. Use of Conductor is entirely at your own risk.</p>
+        <h3 style="color:var(--blue);margin-top:0">7. Limitation of Liability</h3>
+        <p>TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, ALXLABS SHALL NOT BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, OR CONSEQUENTIAL DAMAGES ARISING FROM YOUR USE OF CONDUCTOR.</p>
       </div>
 
       <div class="card" style="margin-bottom:20px;">
-        <h3 style="color:var(--blue);margin-top:0">8. Limitation of Liability</h3>
-        <p>TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT SHALL ALXLABS, ITS CONTRIBUTORS, OR ANY AFFILIATED PARTIES BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING BUT NOT LIMITED TO PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; BUSINESS INTERRUPTION; OR LOSS OF GOODWILL) ARISING OUT OF OR IN CONNECTION WITH YOUR USE OF — OR INABILITY TO USE — CONDUCTOR, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.</p>
-        <p>Some jurisdictions do not allow the exclusion of certain warranties or limitation of liability for certain damages. In such jurisdictions, AlxLabs's liability is limited to the greatest extent permitted by law.</p>
+        <h3 style="color:var(--blue);margin-top:0">8. Indemnification</h3>
+        <p>You agree to indemnify and hold harmless AlxLabs and its contributors from any claims arising out of your use of Conductor or your violation of these Terms.</p>
       </div>
 
       <div class="card" style="margin-bottom:20px;">
-        <h3 style="color:var(--blue);margin-top:0">9. Indemnification</h3>
-        <p>You agree to indemnify, defend, and hold harmless AlxLabs and its contributors from and against any claims, liabilities, damages, losses, and expenses — including reasonable attorneys' fees — arising out of or in any way connected with your use of Conductor, your violation of these Terms, or your violation of any third party's rights.</p>
-      </div>
-
-      <div class="card" style="margin-bottom:20px;">
-        <h3 style="color:var(--blue);margin-top:0">10. Governing Law & Dispute Resolution</h3>
-        <p>These Terms shall be governed by and construed in accordance with the laws of the jurisdiction in which AlxLabs is established, without regard to conflict of law principles. Any dispute arising from these Terms or your use of Conductor shall first be addressed through good-faith negotiation. If unresolved, disputes shall be submitted to binding arbitration or the competent courts of the applicable jurisdiction.</p>
-      </div>
-
-      <div class="card" style="margin-bottom:20px;">
-        <h3 style="color:var(--blue);margin-top:0">11. Changes to Terms</h3>
-        <p>AlxLabs reserves the right to modify these Terms at any time. Material changes will be communicated via a commit to the GitHub repository with a clear description of what changed. Your continued use of Conductor after any update constitutes your acceptance of the revised Terms. If you disagree with a change, you should stop using the software.</p>
+        <h3 style="color:var(--blue);margin-top:0">9. Changes to Terms</h3>
+        <p>AlxLabs reserves the right to modify these Terms at any time. Material changes will be communicated via a commit to the GitHub repository. Continued use constitutes acceptance.</p>
       </div>
 
       <div class="card">
-        <h3 style="color:var(--blue);margin-top:0">12. Contact & Questions</h3>
-        <p>For questions about these Terms of Service, please open an issue or discussion on the official GitHub repository:</p>
+        <h3 style="color:var(--blue);margin-top:0">10. Contact &amp; Questions</h3>
+        <p>For questions about these Terms, please open an issue or discussion on the official GitHub repository:</p>
         <p><a href="https://github.com/thealxlabs/conductor" target="_blank" style="color:var(--blue)">github.com/thealxlabs/conductor</a></p>
         <p style="color:var(--dim);font-size:.8rem;margin-top:16px;">These Terms of Service were last updated in January 2026 and apply to all versions of Conductor.</p>
       </div>
@@ -1624,122 +1907,174 @@ Final text response delivered back to the transport</code></div>
       </div>
 
       <div class="card" style="margin-bottom:20px;">
-        <h3 style="color:var(--orange);margin-top:0">1. Overview & Local-First Commitment</h3>
-        <p>This Privacy Policy describes how Alexander Wondwossen / TheAlxLabs ("AlxLabs," "we," "us") approaches data handling in connection with the Conductor open-source software ("Conductor," "the Software"). Conductor is designed as a local-first application: it runs entirely on your machine, and AlxLabs operates no servers that participate in your normal usage of the software.</p>
-        <p>This policy applies to all versions of Conductor distributed via the official GitHub repository at <a href="https://github.com/thealxlabs/conductor" target="_blank" style="color:var(--blue)">github.com/thealxlabs/conductor</a>. If you access a Conductor instance operated by a third party, that party's privacy policy governs instead.</p>
+        <h3 style="color:var(--orange);margin-top:0">1. Overview &amp; Local-First Commitment</h3>
+        <p>This Privacy Policy describes how Alexander Wondwossen / TheAlxLabs ("AlxLabs," "we," "us") approaches data handling in connection with the Conductor open-source software. Conductor is designed as a local-first application: it runs entirely on your machine, and AlxLabs operates no servers that participate in your normal usage.</p>
+        <p>This policy applies to all versions of Conductor distributed via the official GitHub repository at <a href="https://github.com/thealxlabs/conductor" target="_blank" style="color:var(--blue)">github.com/thealxlabs/conductor</a>.</p>
       </div>
 
       <div class="card" style="margin-bottom:20px;">
         <h3 style="color:var(--orange);margin-top:0">2. Information We Do Not Collect</h3>
-        <p>AlxLabs does not collect, process, store, or transmit any of the following:</p>
-        <ul class="tech-list" style="margin:12px 0">
-          <li><strong>Personal identifiable information (PII)</strong> — name, email address, phone number, or any identity data</li>
-          <li><strong>Conversation history or agent outputs</strong> — your prompts and AI responses are processed locally only</li>
-          <li><strong>API keys and authentication tokens</strong> — credentials you configure are stored in your local encrypted vault</li>
-          <li><strong>Usage analytics and telemetry</strong> — no session data, feature usage stats, or event tracking of any kind</li>
-          <li><strong>Crash reports and error logs</strong> — errors are printed to your local terminal only</li>
-          <li><strong>IP addresses and network identifiers</strong> — we have no server infrastructure to log these</li>
-          <li><strong>Device fingerprints and hardware identifiers</strong> — no device-level tracking whatsoever</li>
-          <li><strong>Location data</strong> — Conductor does not request or infer your geographic location</li>
-          <li><strong>Files and documents</strong> — files you process through the files plugin stay on your local filesystem</li>
-        </ul>
+        <p>AlxLabs does not collect, process, store, or transmit any of the following: personal identifiable information, conversation history or agent outputs, API keys and authentication tokens, usage analytics and telemetry, crash reports, IP addresses, device fingerprints, location data, or your files. Nothing.</p>
       </div>
 
       <div class="card" style="margin-bottom:20px;">
         <h3 style="color:var(--orange);margin-top:0">3. Local Data Storage</h3>
-        <p>All persistent data created by Conductor is stored in a single directory on your local filesystem: <code>~/.conductor/</code>. This includes:</p>
-        <ul class="tech-list" style="margin:12px 0 16px">
-          <li><strong>Configuration files</strong> — AI provider settings, plugin configuration, and feature flags (<code>config.json</code>)</li>
-          <li><strong>Encrypted credential vault</strong> — API keys and OAuth tokens, encrypted with AES-256-GCM using a key derived from a master password you set during installation (<code>keychain.enc</code>)</li>
-          <li><strong>Notes vault</strong> — any notes you create via the notes plugin, stored as local markdown files with full-text index</li>
-          <li><strong>Conversation logs</strong> — if enabled, conversation history is stored locally for context continuity only</li>
-        </ul>
-        <p>You have complete control over this directory. Delete <code>~/.conductor/</code> at any time to fully and permanently remove all Conductor data from your system. No remote deletion or deregistration is required.</p>
+        <p>All persistent data created by Conductor is stored in <code>~/.conductor/</code> on your local filesystem — config, encrypted credentials, notes, and logs. Delete this directory at any time to fully and permanently remove all Conductor data. No remote deletion required.</p>
       </div>
 
       <div class="card" style="margin-bottom:20px;">
         <h3 style="color:var(--orange);margin-top:0">4. AI Provider Interactions</h3>
-        <p>When you use Conductor with a cloud AI provider (Anthropic Claude, OpenAI GPT-4o, Google Gemini), your prompts and conversation context are sent directly from your machine to that provider's API using your own API key. These interactions are governed by the respective provider's privacy policy:</p>
-        <ul class="tech-list" style="margin:12px 0">
-          <li><strong>Anthropic:</strong> <a href="https://www.anthropic.com/legal/privacy" target="_blank" style="color:var(--blue)">anthropic.com/legal/privacy</a></li>
-          <li><strong>OpenAI:</strong> <a href="https://openai.com/policies/privacy-policy" target="_blank" style="color:var(--blue)">openai.com/policies/privacy-policy</a></li>
-          <li><strong>Google (Gemini):</strong> <a href="https://policies.google.com/privacy" target="_blank" style="color:var(--blue)">policies.google.com/privacy</a></li>
-          <li><strong>Ollama (local):</strong> No data leaves your machine. Fully offline operation.</li>
-        </ul>
-        <p>AlxLabs is not an intermediary in these API calls and has no visibility into your conversations with AI providers.</p>
+        <p>Your prompts go directly from your machine to your chosen AI provider (Anthropic, OpenAI, Google, or Ollama locally) using your own API key. AlxLabs is not an intermediary and has no visibility into these calls.</p>
       </div>
 
       <div class="card" style="margin-bottom:20px;">
-        <h3 style="color:var(--orange);margin-top:0">5. Google OAuth & Third-Party Service Tokens</h3>
-        <p>When you optionally connect Google services — Gmail, Google Calendar — via OAuth 2.0, the following applies:</p>
-        <ul class="tech-list" style="margin:12px 0">
-          <li>Conductor requests only the minimum OAuth scopes required for the specific operations you enable (e.g., <code>gmail.readonly</code> for reading email, <code>gmail.send</code> for sending)</li>
-          <li>OAuth access tokens and refresh tokens are stored exclusively in your local AES-256-GCM encrypted keychain (<code>~/.conductor/keychain.enc</code>)</li>
-          <li>Tokens are never transmitted to AlxLabs; all token refresh operations happen directly between your machine and Google's OAuth servers</li>
-          <li>You can revoke Conductor's Google access at any time via <a href="https://myaccount.google.com/permissions" target="_blank" style="color:var(--blue)">myaccount.google.com/permissions</a></li>
-        </ul>
-        <p>The same token handling applies to other OAuth-integrated services such as Spotify and Slack. All credentials remain local.</p>
+        <h3 style="color:var(--orange);margin-top:0">5. Google OAuth &amp; Third-Party Service Tokens</h3>
+        <p>OAuth access tokens and refresh tokens are stored exclusively in your local AES-256-GCM encrypted keychain. They are never transmitted to AlxLabs. Revoke access at any time: <a href="https://myaccount.google.com/permissions" target="_blank" style="color:var(--blue)">myaccount.google.com/permissions</a></p>
       </div>
 
       <div class="card" style="margin-bottom:20px;">
-        <h3 style="color:var(--orange);margin-top:0">6. Third-Party Plugin Communications</h3>
-        <p>Conductor's plugin system enables direct communication between your machine and third-party services. When active plugins connect to external APIs, those communications are subject to the respective service's own privacy policies:</p>
-        <ul class="tech-list" style="margin:12px 0">
-          <li><strong>Spotify</strong> — playback and playlist data sent to the Spotify Web API using your credentials</li>
-          <li><strong>Telegram</strong> — messages relayed through Telegram's Bot API using your bot token</li>
-          <li><strong>GitHub</strong> — repository interactions via GitHub's REST API using your personal access token</li>
-          <li><strong>Any other configured plugin</strong> — follows the same pattern: direct machine-to-service, credentials local</li>
-        </ul>
-        <p>AlxLabs has no visibility into these plugin interactions. We are not a data processor for any third-party service you connect to Conductor.</p>
+        <h3 style="color:var(--orange);margin-top:0">6. Security Practices</h3>
+        <p>AES-256-GCM encryption for all keychain credentials. No plaintext credential storage. Sandboxed file access within user-defined path constraints. While we implement strong local security, no software can guarantee absolute security — you remain responsible for securing your machine and master password.</p>
       </div>
 
       <div class="card" style="margin-bottom:20px;">
-        <h3 style="color:var(--orange);margin-top:0">7. Website & GitHub</h3>
-        <p>This website (the Conductor landing page) may be hosted via standard static hosting infrastructure. Standard server access logs — IP address, browser user agent, pages accessed — may be collected by the hosting provider. AlxLabs does not use cookies, tracking pixels, third-party analytics scripts, or advertising networks on this site.</p>
-        <p>If you interact with the Conductor GitHub repository (opening issues, submitting pull requests, starring the repo), GitHub's own privacy policy governs that data: <a href="https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement" target="_blank" style="color:var(--blue)">GitHub Privacy Statement</a>.</p>
+        <h3 style="color:var(--orange);margin-top:0">7. Your Rights &amp; Data Control</h3>
+        <p>All data is in <code>~/.conductor/</code>. Delete with <code>rm -rf ~/.conductor/</code>. Notes and configs are plain files — copy them wherever you need. Revoke third-party access directly in those services' account settings.</p>
       </div>
 
       <div class="card" style="margin-bottom:20px;">
-        <h3 style="color:var(--orange);margin-top:0">8. Children's Privacy</h3>
-        <p>Conductor is not directed at children under the age of 13 (or the applicable age of digital consent in your jurisdiction). We do not knowingly collect personal information from children. If you believe a child has provided personal information in connection with this software, please contact us via GitHub so we can address the situation appropriately.</p>
-      </div>
-
-      <div class="card" style="margin-bottom:20px;">
-        <h3 style="color:var(--orange);margin-top:0">9. Security Practices</h3>
-        <p>Conductor implements the following security measures to protect locally stored data:</p>
-        <ul class="tech-list" style="margin:12px 0">
-          <li><strong>AES-256-GCM encryption</strong> for all credentials stored in the keychain — authenticated encryption that detects tampering</li>
-          <li><strong>Master password derivation</strong> — the encryption key is derived from a master password you set; it is never stored in plaintext</li>
-          <li><strong>No plaintext credential storage</strong> — API keys and tokens are never written to unencrypted config files</li>
-          <li><strong>Sandboxed file access</strong> — the files plugin operates within user-defined path constraints to prevent inadvertent system-wide access</li>
-        </ul>
-        <p>While we implement strong local security practices, no software can guarantee absolute security. You remain responsible for securing your machine, your master password, and physical access to your device.</p>
-      </div>
-
-      <div class="card" style="margin-bottom:20px;">
-        <h3 style="color:var(--orange);margin-top:0">10. Your Rights & Data Control</h3>
-        <p>Because Conductor stores no data on AlxLabs servers, traditional "data subject request" processes (access, deletion, portability) are managed entirely by you at the local level:</p>
-        <ul class="tech-list" style="margin:12px 0">
-          <li><strong>Access your data:</strong> All data is in <code>~/.conductor/</code> — inspect it at any time</li>
-          <li><strong>Delete your data:</strong> Run <code>rm -rf ~/.conductor/</code> to permanently remove all Conductor data</li>
-          <li><strong>Export your data:</strong> Notes and configs are plain files; copy them wherever you need</li>
-          <li><strong>Revoke third-party access:</strong> Revoke OAuth permissions directly in the respective service's account settings</li>
-        </ul>
-        <p>If you are located in the European Economic Area (EEA), the United Kingdom, or another jurisdiction with applicable data protection law, these rights may also be available to you with respect to any data processed by third-party services you connect through Conductor. Contact those services directly to exercise such rights.</p>
-      </div>
-
-      <div class="card" style="margin-bottom:20px;">
-        <h3 style="color:var(--orange);margin-top:0">11. Changes to This Policy</h3>
-        <p>We may update this Privacy Policy to reflect changes in our software, legal requirements, or best practices. Material changes will be communicated via a commit to the GitHub repository. The "Last updated" date at the top of this page reflects when the most recent revision was made. Continued use of Conductor following an update constitutes your acceptance of the revised policy.</p>
+        <h3 style="color:var(--orange);margin-top:0">8. Changes to This Policy</h3>
+        <p>Material changes will be communicated via a commit to the GitHub repository. Continued use constitutes acceptance of the revised policy.</p>
       </div>
 
       <div class="card">
-        <h3 style="color:var(--orange);margin-top:0">12. Contact</h3>
-        <p>Questions, concerns, or requests related to this Privacy Policy? Please open an issue or discussion on the official GitHub repository:</p>
+        <h3 style="color:var(--orange);margin-top:0">9. Contact</h3>
         <p><a href="https://github.com/thealxlabs/conductor" target="_blank" style="color:var(--blue)">github.com/thealxlabs/conductor</a></p>
         <p style="color:var(--dim);font-size:.8rem;margin-top:16px;">This Privacy Policy was last updated in January 2026 and applies to all versions of Conductor distributed via the official repository.</p>
       </div>
     </div>
+
+
+    <!-- ██████████████ WAITLIST PAGE ██████████████ -->
+    <div id="page-waitlist" class="page fade-in">
+      <div class="page-header">
+        <h1 class="page-title">BETA_ACCESS.md</h1>
+        <p class="page-sub">Google features — Gmail, Calendar, Drive — are invite-only while we complete Google's OAuth verification. All other plugins work immediately with no invite needed.</p>
+      </div>
+
+      <div class="waitlist-grid">
+
+        <!-- LEFT: Info -->
+        <div style="display:flex;flex-direction:column;gap:20px;">
+
+          <div class="card">
+            <h2>🔑 What's in Beta</h2>
+            <p>All plugins work immediately after install. Google features require a one-time invite because Google's verification process is ongoing.</p>
+            <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px;">
+              <div class="wl-avail-row wl-avail-stable">
+                <span class="wl-tag wl-tag-green">STABLE</span>
+                <span style="color:var(--muted);font-size:.85rem;">All 20+ non-Google plugins — available now, no waitlist</span>
+              </div>
+              <div class="wl-avail-row wl-avail-beta">
+                <span class="wl-tag wl-tag-orange">BETA</span>
+                <span style="color:var(--muted);font-size:.85rem;">Gmail · Google Calendar · Google Drive — invite required</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>⚡ What Beta Gets You</h2>
+            <ul class="tech-list">
+              <li><strong>Gmail</strong> — Read, compose, send, and label emails through natural language</li>
+              <li><strong>Google Calendar</strong> — Create, update, and query events across all your calendars</li>
+              <li><strong>Google Drive</strong> — Create, read, and manage files through conversation</li>
+              <li><strong>One-click connect</strong> — OAuth flow via <code>conductor auth google</code>, no extra setup</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h2>📋 How It Works</h2>
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <div class="wl-step"><span class="wl-step-num">01</span><span style="color:var(--muted);font-size:.875rem;">Submit the form with your Gmail address</span></div>
+              <div class="wl-step"><span class="wl-step-num">02</span><span style="color:var(--muted);font-size:.875rem;">We add your address to the beta — confirmation within 1–3 days</span></div>
+              <div class="wl-step"><span class="wl-step-num">03</span><span style="color:var(--muted);font-size:.875rem;">Run <code>conductor auth google</code> to connect</span></div>
+              <div class="wl-step"><span class="wl-step-num">04</span><span style="color:var(--muted);font-size:.875rem;">Gmail, Calendar, and Drive unlock automatically — no extra steps</span></div>
+            </div>
+            <div class="callout callout-success" style="margin-top:20px;">
+              <strong>Privacy:</strong> Tokens stay in <code>~/.conductor/keychain/</code> — AES-256-GCM encrypted on your machine. We never see them.
+            </div>
+          </div>
+
+        </div>
+
+        <!-- RIGHT: Form + FAQ -->
+        <div style="display:flex;flex-direction:column;gap:20px;">
+
+          <div class="card">
+            <h2>📬 Request Access</h2>
+            <p>We review requests manually and respond within 1–3 days.</p>
+
+            <div id="waitlist-form" style="margin-top:20px;display:flex;flex-direction:column;gap:14px;">
+              <div>
+                <label class="wl-label">Your Name</label>
+                <input id="wl-name" type="text" class="wl-input" placeholder="Alexander" autocomplete="name">
+              </div>
+              <div>
+                <label class="wl-label">Gmail Address <span style="color:var(--orange)">*</span></label>
+                <input id="wl-email" type="email" class="wl-input" placeholder="you@gmail.com" autocomplete="email" required onkeydown="if(event.key==='Enter')submitWaitlist()">
+              </div>
+              <div>
+                <label class="wl-label">What will you use it for?</label>
+                <textarea id="wl-use" class="wl-input" rows="3" placeholder="e.g. manage my inbox and schedule meetings through AI..." style="resize:vertical;font-family:var(--sans);"></textarea>
+              </div>
+              <div>
+                <label class="wl-label">How did you find Conductor?</label>
+                <select id="wl-how" class="wl-input">
+                  <option value="" disabled selected>Select one</option>
+                  <option value="github">GitHub</option>
+                  <option value="twitter">X / Twitter</option>
+                  <option value="friend">Friend / colleague</option>
+                  <option value="search">Search</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              <button onclick="submitWaitlist()" id="wl-btn" class="wl-btn">REQUEST BETA ACCESS →</button>
+              <p id="wl-err" style="display:none;font-family:var(--mono);font-size:.75rem;color:var(--orange);margin-top:-6px;"></p>
+            </div>
+
+            <!-- Success state -->
+            <div id="waitlist-success" style="display:none;flex-direction:column;align-items:center;gap:16px;padding:28px 0 12px;text-align:center;">
+              <div style="width:56px;height:56px;background:var(--green-lo);border:1px solid rgba(61,255,160,.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;animation:float 3s ease-in-out infinite;">✓</div>
+              <div>
+                <h3 style="font-family:var(--mono);font-size:1.1rem;font-weight:700;color:var(--green);margin-bottom:8px;">You're on the list</h3>
+                <p style="color:var(--muted);font-size:.875rem;max-width:300px;">We'll add your Gmail address and send a confirmation within 1–3 days. Check your inbox.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2 style="margin-bottom:16px;">FAQ</h2>
+            <div class="wl-faq-item">
+              <div class="wl-faq-q">Will I need to re-authenticate after joining?</div>
+              <div class="wl-faq-a">No. Once connected, your session persists until you manually disconnect.</div>
+            </div>
+            <div class="wl-faq-item">
+              <div class="wl-faq-q">Is the waitlist permanent?</div>
+              <div class="wl-faq-a">No. Once Google's verification is complete, Google features open to everyone with no invite needed.</div>
+            </div>
+            <div class="wl-faq-item">
+              <div class="wl-faq-q">Can I use Conductor without joining?</div>
+              <div class="wl-faq-a">Yes — all non-Google plugins (Claude, GitHub, Spotify, Notion, Telegram, etc.) work immediately.</div>
+            </div>
+            <div class="wl-faq-item">
+              <div class="wl-faq-q">Is my data stored anywhere?</div>
+              <div class="wl-faq-a">No. Tokens are AES-256-GCM encrypted in <code>~/.conductor/keychain/</code>. We never see your data.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div><!-- /waitlist -->
 
   </main>
 
@@ -1750,6 +2085,8 @@ Final text response delivered back to the transport</code></div>
       </div>
       <div class="footer-links">
         <a href="https://github.com/thealxlabs/conductor/releases" target="_blank">Changelog ↗</a>
+        <a href="#waitlist" onclick="showPage('waitlist')">Beta Access</a>
+        <a href="#waitlist" onclick="showPage('waitlist')">Beta Access</a>
         <a href="#license" onclick="showPage('license')">License</a>
         <a href="#tos" onclick="showPage('tos')">Terms of Service</a>
         <a href="#privacy" onclick="showPage('privacy')">Privacy Policy</a>
@@ -1763,7 +2100,48 @@ Final text response delivered back to the transport</code></div>
 <script>
   document.getElementById('yr').textContent = new Date().getFullYear();
 
-  const PAGES = ['home','docs','changelog','license','tos','privacy'];
+  // ── Waitlist → Formspree ─────────────────────────────────────
+  async function submitWaitlist() {
+    const email = document.getElementById('wl-email').value.trim();
+    const errEl = document.getElementById('wl-err');
+    errEl.style.display = 'none';
+    if (!email || !email.includes('@') || !email.includes('.')) {
+      errEl.textContent = 'Please enter a valid Gmail address.';
+      errEl.style.display = 'block';
+      document.getElementById('wl-email').focus();
+      return;
+    }
+    const btn = document.getElementById('wl-btn');
+    btn.disabled = true;
+    btn.textContent = 'SUBMITTING...';
+    try {
+      const res = await fetch('https://formspree.io/f/xvzblnbb', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          name:     document.getElementById('wl-name').value.trim(),
+          email,
+          use_case: document.getElementById('wl-use').value.trim(),
+          referral: document.getElementById('wl-how').value,
+          _subject: 'Conductor Beta Access Request'
+        })
+      });
+      if (res.ok) {
+        document.getElementById('waitlist-form').style.display = 'none';
+        const s = document.getElementById('waitlist-success');
+        s.style.display = 'flex';
+      } else { throw new Error('server'); }
+    } catch {
+      btn.disabled = false;
+      btn.textContent = 'REQUEST BETA ACCESS →';
+      errEl.textContent = 'Something went wrong — please try again or open an issue on GitHub.';
+      errEl.style.display = 'block';
+    }
+  }
+
+
+  // Added 'waitlist' to the page registry
+  const PAGES = ['home','docs','changelog','waitlist','license','tos','privacy'];
 
   function showPage(name) {
     PAGES.forEach(p => {
@@ -1803,10 +2181,52 @@ Final text response delivered back to the transport</code></div>
     });
   }
 
+  // ── Waitlist → Formspree ─────────────────────────────────────
+  async function submitWaitlist() {
+    const email  = document.getElementById('wl-email').value.trim();
+    const errEl  = document.getElementById('wl-err');
+    errEl.style.display = 'none';
+
+    if (!email || !email.includes('@') || !email.includes('.')) {
+      errEl.textContent = 'Please enter a valid Gmail address.';
+      errEl.style.display = 'block';
+      document.getElementById('wl-email').focus();
+      return;
+    }
+
+    const btn = document.getElementById('wl-btn');
+    btn.disabled = true;
+    btn.textContent = 'SUBMITTING...';
+
+    try {
+      const res = await fetch('https://formspree.io/f/xvzblnbb', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          name:     document.getElementById('wl-name').value.trim(),
+          email,
+          use_case: document.getElementById('wl-use').value.trim(),
+          referral: document.getElementById('wl-how').value,
+          _subject: 'Conductor Beta Access Request'
+        })
+      });
+
+      if (res.ok) {
+        document.getElementById('waitlist-form').style.display = 'none';
+        const s = document.getElementById('waitlist-success');
+        s.style.display = 'flex';
+      } else {
+        throw new Error('server');
+      }
+    } catch {
+      btn.disabled = false;
+      btn.textContent = 'REQUEST BETA ACCESS →';
+      errEl.textContent = 'Something went wrong — please try again or open an issue on GitHub.';
+      errEl.style.display = 'block';
+    }
+  }
+
   // ── GitHub Releases → Changelog ──────────────────────────────
-  // Static content is already rendered in the HTML.
-  // This silently tries the GitHub API and replaces static entries
-  // with live data if successful — no error banner ever shown.
   let changelogFetched = false;
 
   async function fetchChangelog() {
@@ -1817,14 +2237,10 @@ Final text response delivered back to the transport</code></div>
       const res = await fetch('https://api.github.com/repos/thealxlabs/conductor/releases', {
         headers: { 'Accept': 'application/vnd.github+json' }
       });
-      if (!res.ok) return; // silently keep static
+      if (!res.ok) return;
       const releases = await res.json();
-      if (!releases.length) return; // silently keep static
+      if (!releases.length) return;
 
-      const container = document.getElementById('changelog-live');
-      const staticEl  = document.getElementById('changelog-static');
-
-      // Build live cards
       const frag = document.createDocumentFragment();
       releases.forEach((rel, i) => {
         const date = new Date(rel.published_at).toLocaleDateString('en-US', {
@@ -1850,9 +2266,7 @@ Final text response delivered back to the transport</code></div>
         frag.appendChild(card);
       });
 
-      // Swap static for live — smooth, no flash
-      staticEl.replaceWith(frag);
-
+      document.getElementById('changelog-static').replaceWith(frag);
     } catch (e) {
       // Network error — static content already showing, do nothing
     }
