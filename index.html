@@ -802,14 +802,7 @@
     .wl-faq-item:last-child { border-bottom: none; }
     .wl-faq-q { font-family: var(--mono); font-size: .8rem; font-weight: 700; color: var(--text); margin-bottom: 5px; }
     .wl-faq-a { color: var(--muted); font-size: .82rem; line-height: 1.65; }
-    /* Beta nav pill */
-    .nav-beta {
-      color: var(--orange) !important;
-      border: 1px solid rgba(255,107,43,.35) !important;
-      background: rgba(255,107,43,.07) !important;
-    }
-    .nav-beta:hover { border-color: rgba(255,107,43,.7) !important; background: rgba(255,107,43,.14) !important; color: #fff !important; }
-    .nav-beta.active { border-color: var(--orange) !important; background: var(--orange-lo) !important; color: var(--orange) !important; }
+
     /* === RESPONSIVE === */
     @media (max-width: 640px) {
       .nav-links a { padding: 6px 8px; font-size: .75rem; }
@@ -832,7 +825,6 @@
         <a id="nav-home" class="active" onclick="showPage('home')" href="#">Overview</a>
         <a id="nav-docs" onclick="showPage('docs')" href="#docs">Docs</a>
         <a id="nav-changelog" onclick="showPage('changelog')" href="#changelog">Changelog</a>
-        <a id="nav-waitlist" class="nav-beta" onclick="showPage('waitlist')" href="#waitlist">Beta Access</a>
         <a id="nav-tos" onclick="showPage('tos')" href="#tos">Terms</a>
         <a id="nav-privacy" onclick="showPage('privacy')" href="#privacy">Privacy</a>
         <a id="nav-license" onclick="showPage('license')" href="#license" style="display:none"></a>
@@ -870,8 +862,6 @@
         <div class="hero-actions">
           <button class="btn" onclick="showPage('docs')">→ Read the Docs</button>
           <a class="btn btn-ghost" href="https://github.com/thealxlabs/conductor" target="_blank">GitHub ↗</a>
-          <button class="btn btn-ghost" onclick="showPage('waitlist')" style="border-color:rgba(255,107,43,.4);color:var(--orange);">🔑 Google Beta</button>
-          <button class="btn btn-ghost" onclick="showPage('waitlist')" style="border-color:rgba(255,107,43,.4);color:var(--orange);">🔑 Google Beta</button>
         </div>
 
         <div class="stats-row">
@@ -1956,125 +1946,6 @@ Final text response delivered back to the transport</code></div>
 
 
     <!-- ██████████████ WAITLIST PAGE ██████████████ -->
-    <div id="page-waitlist" class="page fade-in">
-      <div class="page-header">
-        <h1 class="page-title">BETA_ACCESS.md</h1>
-        <p class="page-sub">Google features — Gmail, Calendar, Drive — are invite-only while we complete Google's OAuth verification. All other plugins work immediately with no invite needed.</p>
-      </div>
-
-      <div class="waitlist-grid">
-
-        <!-- LEFT: Info -->
-        <div style="display:flex;flex-direction:column;gap:20px;">
-
-          <div class="card">
-            <h2>🔑 What's in Beta</h2>
-            <p>All plugins work immediately after install. Google features require a one-time invite because Google's verification process is ongoing.</p>
-            <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px;">
-              <div class="wl-avail-row wl-avail-stable">
-                <span class="wl-tag wl-tag-green">STABLE</span>
-                <span style="color:var(--muted);font-size:.85rem;">All 20+ non-Google plugins — available now, no waitlist</span>
-              </div>
-              <div class="wl-avail-row wl-avail-beta">
-                <span class="wl-tag wl-tag-orange">BETA</span>
-                <span style="color:var(--muted);font-size:.85rem;">Gmail · Google Calendar · Google Drive — invite required</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="card">
-            <h2>⚡ What Beta Gets You</h2>
-            <ul class="tech-list">
-              <li><strong>Gmail</strong> — Read, compose, send, and label emails through natural language</li>
-              <li><strong>Google Calendar</strong> — Create, update, and query events across all your calendars</li>
-              <li><strong>Google Drive</strong> — Create, read, and manage files through conversation</li>
-              <li><strong>One-click connect</strong> — OAuth flow via <code>conductor auth google</code>, no extra setup</li>
-            </ul>
-          </div>
-
-          <div class="card">
-            <h2>📋 How It Works</h2>
-            <div style="display:flex;flex-direction:column;gap:12px;">
-              <div class="wl-step"><span class="wl-step-num">01</span><span style="color:var(--muted);font-size:.875rem;">Submit the form with your Gmail address</span></div>
-              <div class="wl-step"><span class="wl-step-num">02</span><span style="color:var(--muted);font-size:.875rem;">We add your address to the beta — confirmation within 1–3 days</span></div>
-              <div class="wl-step"><span class="wl-step-num">03</span><span style="color:var(--muted);font-size:.875rem;">Run <code>conductor auth google</code> to connect</span></div>
-              <div class="wl-step"><span class="wl-step-num">04</span><span style="color:var(--muted);font-size:.875rem;">Gmail, Calendar, and Drive unlock automatically — no extra steps</span></div>
-            </div>
-            <div class="callout callout-success" style="margin-top:20px;">
-              <strong>Privacy:</strong> Tokens stay in <code>~/.conductor/keychain/</code> — AES-256-GCM encrypted on your machine. We never see them.
-            </div>
-          </div>
-
-        </div>
-
-        <!-- RIGHT: Form + FAQ -->
-        <div style="display:flex;flex-direction:column;gap:20px;">
-
-          <div class="card">
-            <h2>📬 Request Access</h2>
-            <p>We review requests manually and respond within 1–3 days.</p>
-
-            <div id="waitlist-form" style="margin-top:20px;display:flex;flex-direction:column;gap:14px;">
-              <div>
-                <label class="wl-label">Your Name</label>
-                <input id="wl-name" type="text" class="wl-input" placeholder="Alexander" autocomplete="name">
-              </div>
-              <div>
-                <label class="wl-label">Gmail Address <span style="color:var(--orange)">*</span></label>
-                <input id="wl-email" type="email" class="wl-input" placeholder="you@gmail.com" autocomplete="email" required onkeydown="if(event.key==='Enter')submitWaitlist()">
-              </div>
-              <div>
-                <label class="wl-label">What will you use it for?</label>
-                <textarea id="wl-use" class="wl-input" rows="3" placeholder="e.g. manage my inbox and schedule meetings through AI..." style="resize:vertical;font-family:var(--sans);"></textarea>
-              </div>
-              <div>
-                <label class="wl-label">How did you find Conductor?</label>
-                <select id="wl-how" class="wl-input">
-                  <option value="" disabled selected>Select one</option>
-                  <option value="github">GitHub</option>
-                  <option value="twitter">X / Twitter</option>
-                  <option value="friend">Friend / colleague</option>
-                  <option value="search">Search</option>
-                  <option value="other">Other</option>
-                </select>
-              </div>
-              <button onclick="submitWaitlist()" id="wl-btn" class="wl-btn">REQUEST BETA ACCESS →</button>
-              <p id="wl-err" style="display:none;font-family:var(--mono);font-size:.75rem;color:var(--orange);margin-top:-6px;"></p>
-            </div>
-
-            <!-- Success state -->
-            <div id="waitlist-success" style="display:none;flex-direction:column;align-items:center;gap:16px;padding:28px 0 12px;text-align:center;">
-              <div style="width:56px;height:56px;background:var(--green-lo);border:1px solid rgba(61,255,160,.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;animation:float 3s ease-in-out infinite;">✓</div>
-              <div>
-                <h3 style="font-family:var(--mono);font-size:1.1rem;font-weight:700;color:var(--green);margin-bottom:8px;">You're on the list</h3>
-                <p style="color:var(--muted);font-size:.875rem;max-width:300px;">We'll add your Gmail address and send a confirmation within 1–3 days. Check your inbox.</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="card">
-            <h2 style="margin-bottom:16px;">FAQ</h2>
-            <div class="wl-faq-item">
-              <div class="wl-faq-q">Will I need to re-authenticate after joining?</div>
-              <div class="wl-faq-a">No. Once connected, your session persists until you manually disconnect.</div>
-            </div>
-            <div class="wl-faq-item">
-              <div class="wl-faq-q">Is the waitlist permanent?</div>
-              <div class="wl-faq-a">No. Once Google's verification is complete, Google features open to everyone with no invite needed.</div>
-            </div>
-            <div class="wl-faq-item">
-              <div class="wl-faq-q">Can I use Conductor without joining?</div>
-              <div class="wl-faq-a">Yes — all non-Google plugins (Claude, GitHub, Spotify, Notion, Telegram, etc.) work immediately.</div>
-            </div>
-            <div class="wl-faq-item">
-              <div class="wl-faq-q">Is my data stored anywhere?</div>
-              <div class="wl-faq-a">No. Tokens are AES-256-GCM encrypted in <code>~/.conductor/keychain/</code>. We never see your data.</div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </div><!-- /waitlist -->
 
   </main>
 
@@ -2085,8 +1956,6 @@ Final text response delivered back to the transport</code></div>
       </div>
       <div class="footer-links">
         <a href="https://github.com/thealxlabs/conductor/releases" target="_blank">Changelog ↗</a>
-        <a href="#waitlist" onclick="showPage('waitlist')">Beta Access</a>
-        <a href="#waitlist" onclick="showPage('waitlist')">Beta Access</a>
         <a href="#license" onclick="showPage('license')">License</a>
         <a href="#tos" onclick="showPage('tos')">Terms of Service</a>
         <a href="#privacy" onclick="showPage('privacy')">Privacy Policy</a>
@@ -2182,95 +2051,7 @@ Final text response delivered back to the transport</code></div>
   }
 
   // ── Waitlist → Formspree ─────────────────────────────────────
-  async function submitWaitlist() {
-    const email  = document.getElementById('wl-email').value.trim();
-    const errEl  = document.getElementById('wl-err');
-    errEl.style.display = 'none';
 
-    if (!email || !email.includes('@') || !email.includes('.')) {
-      errEl.textContent = 'Please enter a valid Gmail address.';
-      errEl.style.display = 'block';
-      document.getElementById('wl-email').focus();
-      return;
-    }
-
-    const btn = document.getElementById('wl-btn');
-    btn.disabled = true;
-    btn.textContent = 'SUBMITTING...';
-
-    try {
-      const res = await fetch('https://formspree.io/f/xvzblnbb', {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({
-          name:     document.getElementById('wl-name').value.trim(),
-          email,
-          use_case: document.getElementById('wl-use').value.trim(),
-          referral: document.getElementById('wl-how').value,
-          _subject: 'Conductor Beta Access Request'
-        })
-      });
-
-      if (res.ok) {
-        document.getElementById('waitlist-form').style.display = 'none';
-        const s = document.getElementById('waitlist-success');
-        s.style.display = 'flex';
-      } else {
-        throw new Error('server');
-      }
-    } catch {
-      btn.disabled = false;
-      btn.textContent = 'REQUEST BETA ACCESS →';
-      errEl.textContent = 'Something went wrong — please try again or open an issue on GitHub.';
-      errEl.style.display = 'block';
-    }
-  }
-
-  // ── GitHub Releases → Changelog ──────────────────────────────
-  let changelogFetched = false;
-
-  async function fetchChangelog() {
-    if (changelogFetched) return;
-    changelogFetched = true;
-
-    try {
-      const res = await fetch('https://api.github.com/repos/thealxlabs/conductor/releases', {
-        headers: { 'Accept': 'application/vnd.github+json' }
-      });
-      if (!res.ok) return;
-      const releases = await res.json();
-      if (!releases.length) return;
-
-      const frag = document.createDocumentFragment();
-      releases.forEach((rel, i) => {
-        const date = new Date(rel.published_at).toLocaleDateString('en-US', {
-          year: 'numeric', month: 'long', day: 'numeric'
-        });
-        const bodyHtml = parseReleaseBody(rel.body || '');
-        const isLatest = i === 0;
-        const card = document.createElement('div');
-        card.className = 'card changelog-entry';
-        card.style.cssText = 'border-bottom:none;padding:32px;';
-        card.innerHTML = `
-          <div style="display:flex;align-items:center;gap:14px;margin-bottom:6px;flex-wrap:wrap;">
-            <span class="changelog-version" style="${isLatest ? 'background:var(--orange-lo);border-color:rgba(255,107,43,.35);color:var(--orange);' : ''}">${escHtml(rel.tag_name)}</span>
-            ${isLatest ? '<span style="font-family:var(--mono);font-size:.62rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--orange);background:var(--orange-lo);border:1px solid rgba(255,107,43,.25);padding:3px 10px;border-radius:3px;">latest</span>' : ''}
-            ${rel.prerelease ? '<span style="font-family:var(--mono);font-size:.62rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);background:rgba(255,255,255,.05);border:1px solid var(--border);padding:3px 10px;border-radius:3px;">pre-release</span>' : ''}
-          </div>
-          <div class="changelog-date" style="margin-bottom:${bodyHtml ? '18px' : '0'}">${date}</div>
-          ${bodyHtml}
-          <div style="margin-top:${bodyHtml ? '16px' : '4px'};">
-            <a href="${escHtml(rel.html_url)}" target="_blank" style="font-family:var(--mono);font-size:.72rem;color:var(--blue);text-decoration:none;transition:color .15s;" onmouseover="this.style.color='var(--orange)'" onmouseout="this.style.color='var(--blue)'">View on GitHub ↗</a>
-          </div>
-        `;
-        frag.appendChild(card);
-      });
-
-      document.getElementById('changelog-static').replaceWith(frag);
-    } catch (e) {
-      // Network error — static content already showing, do nothing
-    }
-  }
 
   function parseReleaseBody(md) {
     if (!md.trim()) return '';
