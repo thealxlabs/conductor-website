@@ -4,30 +4,16 @@
   "framework": null,
   "routes": [
     {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
-  ]
-}
-{
-  "headers": [
-    {
-      "source": "/install.sh",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "text/plain; charset=utf-8"
-        }
-      ]
+      "src": "/install.sh",
+      "dest": "/install.sh"
     },
     {
-      "source": "/install.ps1",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "text/plain; charset=utf-8"
-        }
-      ]
+      "src": "/install.ps1",
+      "dest": "/install.ps1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ]
 }
