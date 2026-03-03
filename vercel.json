@@ -12,13 +12,10 @@
       "dest": "/install.ps1"
     },
     {
-<<<<<<< HEAD
       "src": "/registry.json",
       "dest": "/registry.json"
     },
     {
-=======
->>>>>>> e5da9219cb6c6d6ee76def271c23eec74baba568
       "src": "/(.*)",
       "dest": "/index.html"
     }
