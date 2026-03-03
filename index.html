@@ -868,6 +868,7 @@
         conductor
       </div>
       <div class="nav-links">
+<<<<<<< HEAD
         <a id="nav-home" class="active" onclick="showPage('home')" href="/">Overview</a>
         <a id="nav-docs" onclick="showPage('docs')" href="/docs">Docs</a>
         <a id="nav-changelog" onclick="showPage('changelog')" href="/changelog">Changelog</a>
@@ -876,6 +877,16 @@
         <a id="nav-license" onclick="showPage('license')" href="/license" style="display:none"></a>
         <a id="nav-marketplace" onclick="showPage('marketplace')" href="/marketplace">Marketplace</a>
         <a id="nav-waitlist" class="nav-beta" onclick="showPage('waitlist')" href="/waitlist">Beta Access</a>
+=======
+        <a id="nav-home" class="active" onclick="showPage('home')" href="#">Overview</a>
+        <a id="nav-docs" onclick="showPage('docs')" href="#docs">Docs</a>
+        <a id="nav-changelog" onclick="showPage('changelog')" href="#changelog">Changelog</a>
+        <a id="nav-tos" onclick="showPage('tos')" href="#tos">Terms</a>
+        <a id="nav-privacy" onclick="showPage('privacy')" href="#privacy">Privacy</a>
+        <a id="nav-license" onclick="showPage('license')" href="#license" style="display:none"></a>
+        <a id="nav-marketplace" onclick="showPage('marketplace')" href="#marketplace">Marketplace</a>
+        <a id="nav-waitlist" class="nav-beta" onclick="showPage('waitlist')" href="#waitlist">Beta Access</a>
+>>>>>>> e5da9219cb6c6d6ee76def271c23eec74baba568
         <a class="nav-github" href="https://github.com/thealxlabs/conductor" target="_blank">
           ↗ GitHub
         </a>
@@ -2065,9 +2076,15 @@ Final text response delivered back to the transport</code></div>
       </div>
       <div class="footer-links">
         <a href="https://github.com/thealxlabs/conductor/releases" target="_blank">Changelog ↗</a>
+<<<<<<< HEAD
         <a href="/license" onclick="showPage('license')">License</a>
         <a href="/tos" onclick="showPage('tos')">Terms of Service</a>
         <a href="/privacy" onclick="showPage('privacy')">Privacy Policy</a>
+=======
+        <a href="#license" onclick="showPage('license')">License</a>
+        <a href="#tos" onclick="showPage('tos')">Terms of Service</a>
+        <a href="#privacy" onclick="showPage('privacy')">Privacy Policy</a>
+>>>>>>> e5da9219cb6c6d6ee76def271c23eec74baba568
         <a href="https://github.com/thealxlabs/conductor" target="_blank">GitHub ↗</a>
       </div>
     </div>
@@ -2264,8 +2281,12 @@ Final text response delivered back to the transport</code></div>
     const navEl = document.getElementById('nav-' + name);
     if (navEl) navEl.classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+<<<<<<< HEAD
     const path = name === 'home' ? '/' : '/' + name;
     history.pushState({ page: name }, '', path);
+=======
+    window.location.hash = name === 'home' ? '' : name;
+>>>>>>> e5da9219cb6c6d6ee76def271c23eec74baba568
 
     if (name === 'changelog') fetchChangelog();
     if (name === 'marketplace') loadMarketplace();
@@ -2317,6 +2338,7 @@ Final text response delivered back to the transport</code></div>
     return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
+<<<<<<< HEAD
   // ── Path routing ─────────────────────────────────────────────
   const initPath = window.location.pathname.replace('/', '').replace(/\/$/, '') || 'home';
   if (PAGES.includes(initPath)) showPage(initPath);
@@ -2325,6 +2347,11 @@ Final text response delivered back to the transport</code></div>
     const page = (e.state && e.state.page) || 'home';
     showPage(page);
   });
+=======
+  // ── Hash routing ─────────────────────────────────────────────
+  const hash = window.location.hash.replace('#', '');
+  if (PAGES.includes(hash)) showPage(hash);
+>>>>>>> e5da9219cb6c6d6ee76def271c23eec74baba568
 
   // ── Docs sidebar scroll tracking ─────────────────────────────
   const docCards = document.querySelectorAll('.docs-content .card[id]');
