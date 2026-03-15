@@ -16,6 +16,10 @@
       "dest": "/registry.json"
     },
     {
+      "src": "/api/oauth-config",
+      "dest": "/api/oauth-config.js"
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.html"
     }
